@@ -10,9 +10,7 @@ router.post("/", async (req, res) => {
 
   setTokenCookie(res, user);
 
-  return res.json({
-    user: user,
-  });
+  return res.json({ user });
 });
 
 module.exports = router;
