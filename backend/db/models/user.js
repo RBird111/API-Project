@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       });
+
       if (user && user.validatePassword(password)) {
         return await User.scope("currentUser").findByPk(user.id);
       }
@@ -34,11 +35,13 @@ module.exports = (sequelize, DataTypes) => {
 
     static async signup({ username, email, password }) {
       const hashedPassword = bcrypt.hashSync(password);
+
       const user = await User.create({
         username,
         email,
         hashedPassword,
       });
+
       return await User.scope("currentUser").findByPk(user.id);
     }
 
@@ -51,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           len: [4, 30],
           isNotEmail(value) {
@@ -63,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
           len: [3, 256],
           isEmail: true,
