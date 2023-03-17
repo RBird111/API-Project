@@ -11,7 +11,10 @@ module.exports = {
       },
       ownerId: {
         type: Sequelize.INTEGER,
-        references: "Users",
+        references: {
+          model: "Users",
+          key: "id",
+        },
         allowNull: false,
       },
       address: {
@@ -32,11 +35,11 @@ module.exports = {
         allowNull: false,
       },
       lat: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       lng: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       name: {
@@ -49,7 +52,7 @@ module.exports = {
         unique: true,
       },
       price: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       createdAt: {
