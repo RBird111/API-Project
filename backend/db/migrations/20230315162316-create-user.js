@@ -30,14 +30,14 @@ module.exports = {
           allowNull: false,
           unique: true,
         },
+        hashedPassword: {
+          type: Sequelize.STRING(60),
+          allowNull: false,
+        },
         email: {
           type: Sequelize.STRING(256),
           allowNull: false,
           unique: true,
-        },
-        hashedPassword: {
-          type: Sequelize.STRING.BINARY,
-          allowNull: false,
         },
         createdAt: {
           allowNull: false,
