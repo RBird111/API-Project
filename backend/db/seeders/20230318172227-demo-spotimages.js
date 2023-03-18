@@ -3,32 +3,29 @@
 
 let options = {};
 if (process.env.NODE_ENV === "production") {
-  options.schema = process.env.SCHEMA; // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.tableName = "Bookings";
+    options.tableName = "SpotImages";
     await queryInterface.bulkInsert(
       options,
       [
         {
           spotId: 1,
-          userId: 1,
-          startDate: "2023/3/15",
-          endDate: "2023/3/18",
+          url: "https://www.test.com",
+          preview: true,
         },
         {
           spotId: 2,
-          userId: 2,
-          startDate: "2023/2/15",
-          endDate: "2023/2/18",
+          url: "https://www.test2.com",
+          preview: false,
         },
         {
           spotId: 3,
-          userId: 1,
-          startDate: "2023/1/15",
-          endDate: "2023/1/18",
+          url: "https://www.test3.com",
+          preview: true,
         },
       ],
       {}
@@ -36,7 +33,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    options.tableName = "Bookings";
+    options.tableName = "SpotImages";
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(
       options,
