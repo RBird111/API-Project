@@ -41,6 +41,24 @@ app.use(
 );
 
 app.use(routes);
+app.get("/", async (req, res, next) => {
+  const { User, Review, Booking, Spot, ReviewImage } = require("./db/models");
+  const users = await User.findAll({
+    include: [
+      {
+        model: Review,
+        include: ReviewImage,
+      },
+      {
+        model: Booking,
+      },
+      {
+        model: Spot,
+      },
+    ],
+  });
+  res.json(users);
+});
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
