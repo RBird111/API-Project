@@ -6,3 +6,4 @@ SELECT * FROM Spots;
 SELECT * FROM Bookings;
 SELECT * FROM SpotImages;
 SELECT * FROM Reviews;
+SELECT * FROM ReviewImages;
