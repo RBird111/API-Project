@@ -4,8 +4,8 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
     static associate(models) {
-      Booking.belongsToMany(models.User, { foreignKey: "userId" });
-      Booking.belongsToMany(models.Spot, { foreignKey: "spotId" });
+      Booking.belongsTo(models.User, { foreignKey: "userId" });
+      Booking.belongsTo(models.Spot, { foreignKey: "spotId" });
     }
   }
   Booking.init(
