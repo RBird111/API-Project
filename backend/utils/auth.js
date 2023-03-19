@@ -51,7 +51,7 @@ const restoreUser = (req, res, next) => {
 };
 
 // If there is no current user, return an error
-const requireAuth = function (req, _res, next) {
+const requireAuth = (req, _res, next) => {
   if (req.user) return next();
 
   const err = new Error("Authentication required");
@@ -61,4 +61,21 @@ const requireAuth = function (req, _res, next) {
   return next(err);
 };
 
-module.exports = { setTokenCookie, restoreUser, requireAuth };
+const isAuthorized = (req, userId) => {
+  const { token } = req.cookies;
+  const { id } = jwt.verify(token, secret).data;
+
+  if (id) {
+    if (id === userId) {
+      return true;
+    }
+  }
+
+  const err = new Error("Forbidden");
+  err.title = "Forbidden";
+  err.errors = { message: "Forbidden" };
+  err.status = 403;
+  return err;
+};
+
+module.exports = { setTokenCookie, restoreUser, requireAuth, isAuthorized };
