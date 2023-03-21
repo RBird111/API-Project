@@ -18,9 +18,14 @@ module.exports = {
           preview: true,
         },
         {
+          spotId: 1,
+          url: "https://www.test.com/2",
+          preview: false,
+        },
+        {
           spotId: 2,
           url: "https://www.test2.com",
-          preview: false,
+          preview: true,
         },
         {
           spotId: 3,
@@ -38,7 +43,7 @@ module.exports = {
     await queryInterface.bulkDelete(
       options,
       {
-        id: { [Op.in]: [1, 2, 3] },
+        id: { [Op.in]: [1, 2, 3, 4] },
       },
       {}
     );

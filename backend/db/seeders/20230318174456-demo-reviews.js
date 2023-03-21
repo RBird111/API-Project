@@ -19,6 +19,12 @@ module.exports = {
           stars: 4,
         },
         {
+          spotId: 1,
+          userId: 1,
+          review: "Review 2 for Spot 1",
+          stars: 3,
+        },
+        {
           spotId: 2,
           userId: 1,
           review: "Review for Spot 2",
@@ -41,7 +47,7 @@ module.exports = {
     await queryInterface.bulkDelete(
       options,
       {
-        id: { [Op.in]: [1, 2, 3] },
+        id: { [Op.in]: [1, 2, 3, 4] },
       },
       {}
     );
