@@ -65,7 +65,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
   });
 });
 
-// Get Spot details by ID
+// Get spot details by ID
 router.get("/:spotId", async (req, res, next) => {
   try {
     const spot = await Spot.findByPk(req.params.spotId);
@@ -166,18 +166,18 @@ router.post("/", validateCreateSpot, async (req, res, next) => {
   res.json(spot);
 });
 
-// Add image to a Spot based on the Spot's ID
+// Add image to a spot based on the spot's ID
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
-  // Add image
   try {
     // Check if authorized
     const spot = await Spot.findByPk(req.params.spotId);
 
     const auth = isAuthorized(req, spot.ownerId);
     if (auth instanceof Error) {
-      next(auth);
+      return next(auth);
     }
 
+    // Add image
     const { url, preview } = req.body;
 
     const spotImage = await SpotImage.create({
@@ -191,6 +191,49 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
       url: spotImage.url,
       preview: spotImage.preview,
     });
+  } catch (e) {
+    res.status(404);
+    res.json({ message: "Spot couldn't be found" });
+  }
+});
+
+// Edit a spot
+router.put("/:spotId", validateCreateSpot, async (req, res, next) => {
+  try {
+    // Check if authorized
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      return next(auth);
+    }
+
+    // Edit
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+
+    spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+
+    res.json(spot);
   } catch (e) {
     res.status(404);
     res.json({ message: "Spot couldn't be found" });
