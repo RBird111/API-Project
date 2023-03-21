@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../utils/auth");
+const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { User, Spot, SpotImage, Review, sequelize } = require("../../db/models");
@@ -65,7 +65,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
   });
 });
 
-// Get Spot details by ID
+// Get spot details by ID
 router.get("/:spotId", async (req, res, next) => {
   try {
     const spot = await Spot.findByPk(req.params.spotId);
@@ -164,6 +164,80 @@ router.post("/", validateCreateSpot, async (req, res, next) => {
 
   res.status(201);
   res.json(spot);
+});
+
+// Add image to a spot based on the spot's ID
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  try {
+    // Check if authorized
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      return next(auth);
+    }
+
+    // Add image
+    const { url, preview } = req.body;
+
+    const spotImage = await SpotImage.create({
+      spotId: req.params.spotId,
+      url,
+      preview,
+    });
+
+    res.json({
+      id: spotImage.id,
+      url: spotImage.url,
+      preview: spotImage.preview,
+    });
+  } catch (e) {
+    res.status(404);
+    res.json({ message: "Spot couldn't be found" });
+  }
+});
+
+// Edit a spot
+router.put("/:spotId", validateCreateSpot, async (req, res, next) => {
+  try {
+    // Check if authorized
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      return next(auth);
+    }
+
+    // Edit
+    const {
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    } = req.body;
+
+    spot.update({
+      address,
+      city,
+      state,
+      country,
+      lat,
+      lng,
+      name,
+      description,
+      price,
+    });
+
+    res.json(spot);
+  } catch (e) {
+    res.status(404);
+    res.json({ message: "Spot couldn't be found" });
+  }
 });
 
 module.exports = router;
