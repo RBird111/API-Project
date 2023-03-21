@@ -51,6 +51,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
         attributes: [],
       },
     ],
+    group:[["Spot.id"]]
   });
 
   res.json({ Spots: spots });
