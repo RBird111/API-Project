@@ -1,5 +1,7 @@
 const express = require("express");
 const { requireAuth } = require("../../utils/auth");
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
 const { User, Spot, SpotImage, Review, sequelize } = require("../../db/models");
 
 const router = express.Router();
@@ -9,6 +11,7 @@ router.get("/", async (req, res, next) => {
   const spots = await Spot.findAll({ raw: true });
 
   for (let spot of spots) {
+    // Get Reviews for each Spot
     const spotReviews = await Review.findOne({
       attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
       where: {
@@ -17,10 +20,12 @@ router.get("/", async (req, res, next) => {
       raw: true,
     });
 
+    // Get preview image for each spot
     const spotImg = await SpotImage.findOne({
       where: { preview: true, spotId: spot.id },
     });
 
+    // Add appropriate keys to each spot
     spot.avgRating = spotReviews.avgRating;
     spot.previewImage = spotImg.url;
   }
