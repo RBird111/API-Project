@@ -21,6 +21,9 @@ router.get("/", async (req, res, next) => {
       {
         model: SpotImage,
         attributes: [],
+        where: {
+          preview: true,
+        },
       },
     ],
     group: [["Spot.id"]],
@@ -49,12 +52,52 @@ router.get("/current", requireAuth, async (req, res, next) => {
       {
         model: SpotImage,
         attributes: [],
+        where: {
+          preview: true,
+        },
       },
     ],
-    group:[["Spot.id"]]
+    group: [["Spot.id"]],
   });
 
   res.json({ Spots: spots });
+});
+
+// Get Spot details by ID
+router.get("/:spotId", async (req, res, next) => {
+  try {
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const spotReviews = await Review.findAll({
+      attributes: [
+        [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
+        [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+      ],
+      where: {
+        spotId: req.params.spotId,
+      },
+      raw: true,
+    });
+
+    const spotImages = await SpotImage.findAll({
+      attributes: {
+        exclude: ["spotId"],
+      },
+      where: { spotId: req.params.spotId },
+    });
+
+    const owner = await User.findOne({ where: { id: spot.ownerId } });
+
+    res.json({
+      ...spot.toJSON(),
+      ...spotReviews[0],
+      SpotImages: spotImages,
+      Owner: owner,
+    });
+  } catch (err) {
+    res.status(404);
+    res.json({ message: "Spot couldn't be found" });
+  }
 });
 
 module.exports = router;
