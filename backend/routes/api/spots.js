@@ -27,7 +27,7 @@ router.get("/", async (req, res, next) => {
 
     // Add appropriate keys to each spot
     spot.avgRating = spotReviews.avgRating;
-    spot.previewImage = spotImg.url;
+    spot.previewImage = spotImg ? spotImg.url : null;
   }
 
   res.json({ Spots: spots });
@@ -97,12 +97,14 @@ router.get("/:spotId", async (req, res, next) => {
       Owner: owner,
     });
   } catch (err) {
+    // Spot not found
     res.status(404);
     res.json({ message: "Spot couldn't be found" });
   }
 });
 
-const validateCreateSpot = [
+// Validation for post/put routes
+const validateSpot = [
   check("address")
     .exists({ checkFalsy: true })
     .withMessage("Street address is required"),
@@ -144,7 +146,7 @@ const validateCreateSpot = [
 ];
 
 // Create a spot
-router.post("/", validateCreateSpot, async (req, res, next) => {
+router.post("/", validateSpot, async (req, res, next) => {
   const ownerId = req.user.id;
   const { address, city, state, country, lat, lng, name, description, price } =
     req.body;
@@ -192,13 +194,14 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
       preview: spotImage.preview,
     });
   } catch (e) {
+    // Spot not found
     res.status(404);
     res.json({ message: "Spot couldn't be found" });
   }
 });
 
 // Edit a spot
-router.put("/:spotId", validateCreateSpot, async (req, res, next) => {
+router.put("/:spotId", validateSpot, async (req, res, next) => {
   try {
     // Check if authorized
     const spot = await Spot.findByPk(req.params.spotId);
@@ -235,6 +238,29 @@ router.put("/:spotId", validateCreateSpot, async (req, res, next) => {
 
     res.json(spot);
   } catch (e) {
+    // Spot not found
+    res.status(404);
+    res.json({ message: "Spot couldn't be found" });
+  }
+});
+
+// Delete a spot
+router.delete("/:spotId", requireAuth, async (req, res, next) => {
+  try {
+    // Check if authorized
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      return next(auth);
+    }
+
+    // Delete
+    spot.destroy();
+
+    res.json({ message: "Successfully deleted" });
+  } catch (e) {
+    // Spot not found
     res.status(404);
     res.json({ message: "Spot couldn't be found" });
   }
