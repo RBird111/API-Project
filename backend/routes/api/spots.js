@@ -6,28 +6,24 @@ const router = express.Router();
 
 // Get all spots
 router.get("/", async (req, res, next) => {
-  const spots = await Spot.findAll({
-    attributes: {
-      include: [
-        [sequelize.fn("AVG", sequelize.col("Reviews.stars")), "avgRating"],
-        [sequelize.fn("MAX", sequelize.col("SpotImages.url")), "previewImage"],
-      ],
-    },
-    include: [
-      {
-        model: Review,
-        attributes: [],
+  const spots = await Spot.findAll({ raw: true });
+
+  for (let spot of spots) {
+    const spotReviews = await Review.findOne({
+      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      where: {
+        spotId: spot.id,
       },
-      {
-        model: SpotImage,
-        attributes: [],
-        where: {
-          preview: true,
-        },
-      },
-    ],
-    group: [["Spot.id"]],
-  });
+      raw: true,
+    });
+
+    const spotImg = await SpotImage.findOne({
+      where: { preview: true, spotId: spot.id },
+    });
+
+    spot.avgRating = spotReviews.avgRating;
+    spot.previewImage = spotImg.url;
+  }
 
   res.json({ Spots: spots });
 });
@@ -68,7 +64,7 @@ router.get("/:spotId", async (req, res, next) => {
   try {
     const spot = await Spot.findByPk(req.params.spotId);
 
-    const spotReviews = await Review.findAll({
+    const spotReviews = await Review.findOne({
       attributes: [
         [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
         [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
@@ -90,7 +86,7 @@ router.get("/:spotId", async (req, res, next) => {
 
     res.json({
       ...spot.toJSON(),
-      ...spotReviews[0],
+      ...spotReviews,
       SpotImages: spotImages,
       Owner: owner,
     });
