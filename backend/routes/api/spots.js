@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("../../utils/auth");
+const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { User, Spot, SpotImage, Review, sequelize } = require("../../db/models");
@@ -167,8 +167,17 @@ router.post("/", validateCreateSpot, async (req, res, next) => {
 });
 
 // Add image to a Spot based on the Spot's ID
-router.post("/:spotId/images", async (req, res, next) => {
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
+  // Add image
   try {
+    // Check if authorized
+    const spot = await Spot.findByPk(req.params.spotId);
+
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      next(auth);
+    }
+
     const { url, preview } = req.body;
 
     const spotImage = await SpotImage.create({
