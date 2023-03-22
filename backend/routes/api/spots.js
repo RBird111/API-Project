@@ -135,7 +135,10 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
 
     // Create booking object
     const bookObj = {
-      User: await spot.getUser({ attributes: ["id", "firstName", "lastName"] }),
+      User: await User.findOne({
+        attributes: ["id", "firstName", "lastName"],
+        where: { id: userId },
+      }),
       id,
       spotId,
       userId,
@@ -303,7 +306,7 @@ const validateReview = [
   requireAuth,
 ];
 
-// Create a review for spot
+// Create a review for a spot
 router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
   // Check that spot exists
   const spot = await Spot.findByPk(req.params.spotId);
@@ -331,6 +334,55 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
   });
 
   res.json(newReview);
+});
+
+// Validate booking body
+const validateBooking = [
+  check("startDate")
+    .exists({ checkFalsy: true })
+    .withMessage("Start date required."),
+
+  check("endDate")
+    .exists({ checkFalsy: true })
+    .withMessage("End date required."),
+
+  requireAuth,
+];
+
+// Create a booking for a spot
+router.post("/:spotId/bookings", validateBooking, async (req, res, next) => {
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
+
+  // Forbid owner from booking spot
+  if (req.user.id === spot.ownerId) {
+    const err = new Error("Forbidden");
+    err.title = "Forbidden";
+    err.errors = { message: "Can't book own spot" };
+    err.status = 403;
+    return next(err);
+  }
+
+  // Build booking
+  const { startDate, endDate } = req.body;
+  const booking = await Booking.build({
+    spotId: req.params.spotId,
+    userId: req.user.id,
+    startDate,
+    endDate,
+  });
+
+  // Validate endDate
+  await booking.validate();
+
+  // Check for booking conflict
+  const conflict = await booking.hasConflict();
+  if (conflict instanceof Error) return next(conflict);
+
+  await booking.save();
+
+  res.json(booking);
 });
 
 // Edit a spot
