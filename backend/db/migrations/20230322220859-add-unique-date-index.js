@@ -8,16 +8,19 @@ if (process.env.NODE_ENV === "production") {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    options.unique = true;
-    options.name = "startDate-endDate";
+    options.tableName = 'Bookings'
     await queryInterface.addIndex(
-      "Bookings",
+      options,
       ["startDate", "endDate"],
-      options
+      {
+        unique: true,
+        name: 'startDate-endDate'
+      }
     );
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeIndex("Bookings", "startDate-endDate", options);
+    options.tableName = 'Bookings'
+    await queryInterface.removeIndex(options, "startDate-endDate");
   },
 };
