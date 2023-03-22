@@ -93,6 +93,10 @@ router.post("/:reviewId/images", validateImage, async (req, res, next) => {
   const review = await Review.findByPk(req.params.reviewId);
   if (!review) return reviewNotFound(next);
 
+  // Check user permissions
+  const auth = isAuthorized(req, review.toJSON().userId);
+  if (auth instanceof Error) return next(auth);
+
   // Check that there are less than 10 images
   const reviewImages = await review.getReviewImages();
   if (reviewImages.length > 10) return maxImagesReached(next);
