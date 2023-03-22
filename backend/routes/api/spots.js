@@ -2,7 +2,22 @@ const express = require("express");
 const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { User, Spot, SpotImage, Review, sequelize } = require("../../db/models");
+const {
+  User,
+  Spot,
+  SpotImage,
+  Review,
+  ReviewImage,
+  sequelize,
+} = require("../../db/models");
+
+const spotNotFound = (next) => {
+  const err = new Error("Spot couldn't be found");
+  err.title = "Spot couldn't be found";
+  err.errors = { message: "Spot couldn't be found" };
+  err.status = 404;
+  return next(err);
+};
 
 const router = express.Router();
 
@@ -65,42 +80,72 @@ router.get("/current", requireAuth, async (req, res, next) => {
   });
 });
 
+// Get reviews by spot ID
+router.get("/:spotId/reviews", async (req, res, next) => {
+  // Check that spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
+
+  // Get reviews
+  const reviews = await Review.findAll({
+    where: { spotId: req.params.spotId },
+    raw: true,
+  });
+
+  // Append user and images to reviews
+  for (const review of reviews) {
+    // Get user
+    const user = await User.findByPk(review.userId, {
+      attributes: { exclude: ["username"] },
+      where: { id: review.userId },
+    });
+
+    // Get review images
+    const reviewImages = await ReviewImage.findAll({
+      where: { reviewId: review.id },
+      attributes: ["id", "url"],
+    });
+
+    // Append both to review
+    review.User = user;
+    review.ReviewImages = reviewImages;
+  }
+
+  res.json({ Reviews: reviews });
+});
+
 // Get spot details by ID
 router.get("/:spotId", async (req, res, next) => {
-  try {
-    const spot = await Spot.findByPk(req.params.spotId);
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
 
-    const spotReviews = await Review.findOne({
-      attributes: [
-        [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
-        [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
-      ],
-      where: {
-        spotId: req.params.spotId,
-      },
-      raw: true,
-    });
+  const spotReviews = await Review.findOne({
+    attributes: [
+      [sequelize.fn("COUNT", sequelize.col("stars")), "numReviews"],
+      [sequelize.fn("AVG", sequelize.col("stars")), "avgStarRating"],
+    ],
+    where: {
+      spotId: req.params.spotId,
+    },
+    raw: true,
+  });
 
-    const spotImages = await SpotImage.findAll({
-      attributes: {
-        exclude: ["spotId"],
-      },
-      where: { spotId: req.params.spotId },
-    });
+  const spotImages = await SpotImage.findAll({
+    attributes: {
+      exclude: ["spotId"],
+    },
+    where: { spotId: req.params.spotId },
+  });
 
-    const owner = await User.findOne({ where: { id: spot.ownerId } });
+  const owner = await User.findOne({ where: { id: spot.ownerId } });
 
-    res.json({
-      ...spot.toJSON(),
-      ...spotReviews,
-      SpotImages: spotImages,
-      Owner: owner,
-    });
-  } catch (err) {
-    // Spot not found
-    res.status(404);
-    res.json({ message: "Spot couldn't be found" });
-  }
+  res.json({
+    ...spot.toJSON(),
+    ...spotReviews,
+    SpotImages: spotImages,
+    Owner: owner,
+  });
 });
 
 // Validation for post/put routes
@@ -170,100 +215,79 @@ router.post("/", validateSpot, async (req, res, next) => {
 
 // Add image to a spot based on the spot's ID
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
-  try {
-    // Check if authorized
-    const spot = await Spot.findByPk(req.params.spotId);
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
 
-    const auth = isAuthorized(req, spot.ownerId);
-    if (auth instanceof Error) {
-      return next(auth);
-    }
-
-    // Add image
-    const { url, preview } = req.body;
-
-    const spotImage = await SpotImage.create({
-      spotId: req.params.spotId,
-      url,
-      preview,
-    });
-
-    res.json({
-      id: spotImage.id,
-      url: spotImage.url,
-      preview: spotImage.preview,
-    });
-  } catch (e) {
-    // Spot not found
-    res.status(404);
-    res.json({ message: "Spot couldn't be found" });
+  // Check if authorized
+  const auth = isAuthorized(req, spot.ownerId);
+  if (auth instanceof Error) {
+    return next(auth);
   }
+
+  // Add image
+  const { url, preview } = req.body;
+
+  const spotImage = await SpotImage.create({
+    spotId: req.params.spotId,
+    url,
+    preview,
+  });
+
+  res.json({
+    id: spotImage.id,
+    url: spotImage.url,
+    preview: spotImage.preview,
+  });
 });
 
 // Edit a spot
 router.put("/:spotId", validateSpot, async (req, res, next) => {
-  try {
-    // Check if authorized
-    const spot = await Spot.findByPk(req.params.spotId);
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
 
-    const auth = isAuthorized(req, spot.ownerId);
-    if (auth instanceof Error) {
-      return next(auth);
-    }
-
-    // Edit
-    const {
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    } = req.body;
-
-    spot.update({
-      address,
-      city,
-      state,
-      country,
-      lat,
-      lng,
-      name,
-      description,
-      price,
-    });
-
-    res.json(spot);
-  } catch (e) {
-    // Spot not found
-    res.status(404);
-    res.json({ message: "Spot couldn't be found" });
+  // Check if authorized
+  const auth = isAuthorized(req, spot.ownerId);
+  if (auth instanceof Error) {
+    return next(auth);
   }
+
+  // Edit
+  const { address, city, state, country, lat, lng, name, description, price } =
+    req.body;
+
+  spot.update({
+    address,
+    city,
+    state,
+    country,
+    lat,
+    lng,
+    name,
+    description,
+    price,
+  });
+
+  res.json(spot);
 });
 
 // Delete a spot
 router.delete("/:spotId", requireAuth, async (req, res, next) => {
-  try {
-    // Check if authorized
-    const spot = await Spot.findByPk(req.params.spotId);
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
 
-    const auth = isAuthorized(req, spot.ownerId);
-    if (auth instanceof Error) {
-      return next(auth);
-    }
-
-    // Delete
-    spot.destroy();
-
-    res.json({ message: "Successfully deleted" });
-  } catch (e) {
-    // Spot not found
-    res.status(404);
-    res.json({ message: "Spot couldn't be found" });
+  // Check if authorized
+  const auth = isAuthorized(req, spot.ownerId);
+  if (auth instanceof Error) {
+    return next(auth);
   }
+
+  // Delete
+  spot.destroy();
+
+  res.json({ message: "Successfully deleted" });
 });
 
 module.exports = router;
