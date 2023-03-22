@@ -8,7 +8,6 @@ const {
   Review,
   ReviewImage,
   SpotImage,
-  sequelize,
 } = require("../../db/models");
 
 const router = express.Router();
