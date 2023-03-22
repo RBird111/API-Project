@@ -58,6 +58,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
       },
       raw: true,
     });
+
     // Get previewImage for spot
     const previewImage = await SpotImage.findOne({
       where: { preview: true, spotId: spot.id },
@@ -112,6 +113,59 @@ router.post("/:reviewId/images", validateImage, async (req, res, next) => {
     id: newImage.id,
     url: newImage.url,
   });
+});
+
+// Validate review body
+const validateReview = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+
+  check("stars")
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+
+  handleValidationErrors,
+
+  requireAuth,
+];
+
+// Edit a review
+router.put("/:reviewId", validateReview, async (req, res, next) => {
+  // Check if review exists
+  const oldReview = await Review.findByPk(req.params.reviewId);
+  if (!oldReview) return reviewNotFound(next);
+
+  // Check user permissions
+  const auth = isAuthorized(req, oldReview.toJSON().userId);
+  if (auth instanceof Error) return next(auth);
+
+  // Edit review
+  const { review, stars } = req.body;
+  const newReview = await oldReview.update({
+    review,
+    stars,
+  });
+
+  res.json(newReview);
+});
+
+// Delete a review
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
+  // Check if review exists
+  const review = await Review.findByPk(req.params.reviewId);
+  if (!review) return reviewNotFound(next);
+
+  // Check user permissions
+  const { userId } = review;
+  const auth = isAuthorized(req, userId);
+  if (auth instanceof Error) return next(auth);
+
+  // Delete review
+  await review.destroy();
+
+  res.json({ message: "Successfully deleted" });
 });
 
 module.exports = router;
