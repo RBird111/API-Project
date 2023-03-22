@@ -8,6 +8,7 @@ const {
   SpotImage,
   Review,
   ReviewImage,
+  Booking,
   sequelize,
 } = require("../../db/models");
 
@@ -113,6 +114,50 @@ router.get("/:spotId/reviews", async (req, res, next) => {
   }
 
   res.json({ Reviews: reviews });
+});
+
+// Get bookings by spot ID
+router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
+  // Check if spot exists
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) return spotNotFound(next);
+
+  // Check to see if user own's spot
+  const ownSpot = req.user.id === spot.ownerId;
+  const bookings = await spot.getBookings({ raw: true });
+
+  // Create Bookings return array
+  let Bookings = [];
+  for (const booking of bookings) {
+    // Get booking properties
+    const { id, spotId, userId, startDate, endDate, createdAt, updatedAt } =
+      booking;
+
+    // Create booking object
+    const bookObj = {
+      User: await spot.getUser({ attributes: ["id", "firstName", "lastName"] }),
+      id,
+      spotId,
+      userId,
+      startDate,
+      endDate,
+      createdAt,
+      updatedAt,
+    };
+
+    if (!ownSpot) {
+      delete bookObj.User;
+      delete bookObj.id;
+      delete bookObj.userId;
+      delete bookObj.createdAt;
+      delete bookObj.updatedAt;
+    }
+
+    // Push booking obj into Bookings array
+    Bookings.push(bookObj);
+  }
+
+  res.json({ Bookings });
 });
 
 // Get spot details by ID
