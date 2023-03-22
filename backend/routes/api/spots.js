@@ -11,6 +11,9 @@ const {
   sequelize,
 } = require("../../db/models");
 
+const router = express.Router();
+
+// Spot not found error
 const spotNotFound = (next) => {
   const err = new Error("Spot couldn't be found");
   err.title = "Spot couldn't be found";
@@ -18,8 +21,6 @@ const spotNotFound = (next) => {
   err.status = 404;
   return next(err);
 };
-
-const router = express.Router();
 
 // Get all spots
 router.get("/", async (req, res, next) => {
@@ -272,7 +273,6 @@ router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
     err.title = "User already has a review for this spot";
     err.errors = { message: "User already has a review for this spot" };
     err.status = 403;
-
     return next(err);
   }
 
