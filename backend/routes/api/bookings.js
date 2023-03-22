@@ -6,6 +6,7 @@ const { User, Spot, SpotImage, Booking } = require("../../db/models");
 
 const router = express.Router();
 
+// Get current user's bookings
 router.get("/current", requireAuth, async (req, res, next) => {
   // Get bookings
   const bookings = await Booking.findAll({
