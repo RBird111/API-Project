@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const { Spot, SpotImage } = require("../../db/models");
 const { requireAuth, isAuthorized } = require("../../utils/auth");
-const { handleValidationErrors } = require("../../utils/validation");
 
 // Spot Image not found error
 const spotImageNotFound = (next) => {
@@ -18,7 +17,7 @@ router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const spotImage = await SpotImage.findByPk(req.params.imageId);
   if (!spotImage) return spotImageNotFound(next);
 
-  // Check user permissions
+  // Check if spot belongs to user
   const spot = await Spot.findOne({ where: { id: spotImage.spotId } });
   const auth = isAuthorized(req, spot.ownerId);
   if (auth instanceof Error) return next(auth);
