@@ -359,7 +359,7 @@ router.post("/:spotId/bookings", validateBooking, async (req, res, next) => {
   if (req.user.id === spot.ownerId) {
     const err = new Error("Forbidden");
     err.title = "Forbidden";
-    err.errors = { message: "Can't book own spot" };
+    err.errors = { message: "Can't create booking for own spot" };
     err.status = 403;
     return next(err);
   }
