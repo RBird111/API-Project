@@ -1,10 +1,8 @@
-const express = require("express");
+const router = require("express").Router();
 const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-const { User, Spot, SpotImage, Booking } = require("../../db/models");
-
-const router = express.Router();
+const { Spot, SpotImage, Booking } = require("../../db/models");
 
 // Booking not found error
 const bookingNotFound = (next) => {
@@ -20,6 +18,15 @@ const expiredBookingError = (next) => {
   const err = new Error("Past bookings can't be modified");
   err.title = "Past bookings can't be modified";
   err.errors = { message: "Past bookings can't be modified" };
+  err.status = 403;
+  return next(err);
+};
+
+// Booking already started error
+const bookingStartedError = (next) => {
+  const err = new Error("Bookings that have been started can't be deleted");
+  err.title = "Bookings that have been started can't be deleted";
+  err.errors = { message: "Bookings that have been started can't be deleted" };
   err.status = 403;
   return next(err);
 };
@@ -77,9 +84,7 @@ router.put("/:bookingId", validateBooking, async (req, res, next) => {
 
   // Check if authorized
   const auth = isAuthorized(req, booking.userId);
-  if (auth instanceof Error) {
-    return next(auth);
-  }
+  if (auth instanceof Error) return next(auth);
 
   // Verify booking isn't past endDate
   if (new Date(booking.endDate).getTime() < new Date().getTime()) {
@@ -100,6 +105,26 @@ router.put("/:bookingId", validateBooking, async (req, res, next) => {
   await booking.save();
 
   res.json(booking);
+});
+
+// Delete a booking
+router.delete("/:bookingId", requireAuth, async (req, res, next) => {
+  // Check if booking exists
+  const booking = await Booking.findByPk(req.params.bookingId);
+  if (!booking) return bookingNotFound(next);
+
+  // Check if user is authorized
+  const auth = isAuthorized(req, booking.userId);
+  if (auth instanceof Error) return next(auth);
+
+  // Check if booking has started
+  if (new Date(booking.startDate).getTime() < new Date().getTime())
+    return bookingStartedError(next);
+
+  // Delete
+  await booking.destroy();
+
+  res.json({ message: "Successfully deleted" });
 });
 
 module.exports = router;

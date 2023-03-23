@@ -1,4 +1,4 @@
-const express = require("express");
+const router = require("express").Router();
 const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -9,8 +9,6 @@ const {
   ReviewImage,
   SpotImage,
 } = require("../../db/models");
-
-const router = express.Router();
 
 // Review not found error
 const reviewNotFound = (next) => {
