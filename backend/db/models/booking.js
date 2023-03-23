@@ -3,11 +3,14 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
+    // Check if booking dates are in conflict with any other bookings
     async hasConflict() {
+      // Grab start and end dates from booking instance
       const startDate = this.startDate.getTime();
 
       const endDate = this.endDate.getTime();
 
+      // Grab dates from all booking instances
       const allBookings = await Booking.findAll({ raw: true });
       for (const booking of allBookings) {
         const [sY, sM, sD] = booking.startDate.split("-");
@@ -24,19 +27,23 @@ module.exports = (sequelize, DataTypes) => {
           parseInt(eD)
         ).getTime();
 
+        // If a booking instance has conflicting start/end dates
         if (
           (startDate < eDate && startDate > sDate) ||
           (endDate > sDate && endDate < eDate)
         ) {
           const errors = {};
+          // Add error if start date conflicts
           if (startDate < eDate && startDate > sDate) {
             errors.startDate = "Start date conflicts with an existing booking";
           }
 
+          // Add error if end date conflicts
           if (endDate > sDate && endDate < eDate) {
             errors.endDate = "End date conflicts with an existing booking";
           }
 
+          // Create error object
           const err = new Error(
             "Sorry, this spot is already booked for the specified dates"
           );
@@ -45,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
             "Sorry, this spot is already booked for the specified dates";
           err.errors = errors;
 
+          // Return error object to caller
           return err;
         }
       }
