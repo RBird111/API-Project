@@ -1,4 +1,4 @@
-const express = require("express");
+const router = require("express").Router();
 const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -11,8 +11,6 @@ const {
   Booking,
   sequelize,
 } = require("../../db/models");
-
-const router = express.Router();
 
 // Spot not found error
 const spotNotFound = (next) => {
@@ -99,7 +97,6 @@ router.get("/:spotId/reviews", async (req, res, next) => {
     // Get user
     const user = await User.findByPk(review.userId, {
       attributes: { exclude: ["username"] },
-      where: { id: review.userId },
     });
 
     // Get review images
