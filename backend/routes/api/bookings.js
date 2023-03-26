@@ -4,32 +4,34 @@ const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
 const { Spot, SpotImage, Booking } = require("../../db/models");
 
+// Errors moved to respective model files
+//
 // Booking not found error
-const bookingNotFound = (next) => {
-  const err = new Error("Booking couldn't be found");
-  err.title = "Booking couldn't be found";
-  err.errors = { message: "Booking couldn't be found" };
-  err.status = 404;
-  return next(err);
-};
+// const bookingNotFound = (next) => {
+//   const err = new Error("Booking couldn't be found");
+//   err.title = "Booking couldn't be found";
+//   err.errors = { message: "Booking couldn't be found" };
+//   err.status = 404;
+//   return next(err);
+// };
 
-// Booking expired error
-const expiredBookingError = (next) => {
-  const err = new Error("Past bookings can't be modified");
-  err.title = "Past bookings can't be modified";
-  err.errors = { message: "Past bookings can't be modified" };
-  err.status = 403;
-  return next(err);
-};
+// // Booking expired error
+// const expiredBookingError = (next) => {
+//   const err = new Error("Past bookings can't be modified");
+//   err.title = "Past bookings can't be modified";
+//   err.errors = { message: "Past bookings can't be modified" };
+//   err.status = 403;
+//   return next(err);
+// };
 
-// Booking already started error
-const bookingStartedError = (next) => {
-  const err = new Error("Bookings that have been started can't be deleted");
-  err.title = "Bookings that have been started can't be deleted";
-  err.errors = { message: "Bookings that have been started can't be deleted" };
-  err.status = 403;
-  return next(err);
-};
+// // Booking already started error
+// const bookingStartedError = (next) => {
+//   const err = new Error("Bookings that have been started can't be deleted");
+//   err.title = "Bookings that have been started can't be deleted";
+//   err.errors = { message: "Bookings that have been started can't be deleted" };
+//   err.status = 403;
+//   return next(err);
+// };
 
 // Get current user's bookings
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -80,7 +82,7 @@ const validateBooking = [
 router.put("/:bookingId", validateBooking, async (req, res, next) => {
   // Check if booking exists
   const booking = await Booking.findByPk(req.params.bookingId);
-  if (!booking) return bookingNotFound(next);
+  if (!booking) return Booking.notFound(next);
 
   // Check if authorized
   const auth = isAuthorized(req, booking.userId);
@@ -88,7 +90,7 @@ router.put("/:bookingId", validateBooking, async (req, res, next) => {
 
   // Verify booking isn't past endDate
   if (new Date(booking.endDate).getTime() < new Date().getTime()) {
-    return expiredBookingError(next);
+    return Booking.isExpired(next);
   }
 
   // Edit
@@ -111,7 +113,7 @@ router.put("/:bookingId", validateBooking, async (req, res, next) => {
 router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   // Check if booking exists
   const booking = await Booking.findByPk(req.params.bookingId);
-  if (!booking) return bookingNotFound(next);
+  if (!booking) return Booking.notFound(next);
 
   // Check if user is authorized
   const auth = isAuthorized(req, booking.userId);
@@ -119,7 +121,7 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
 
   // Check if booking has started
   if (new Date(booking.startDate).getTime() < new Date().getTime())
-    return bookingStartedError(next);
+    return Booking.inProgress(next);
 
   // Delete
   await booking.destroy();

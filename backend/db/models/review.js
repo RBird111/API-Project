@@ -3,6 +3,15 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
+    // Review not found error
+    static notFound(next) {
+      const err = new Error("Review couldn't be found");
+      err.title = "Review couldn't be found";
+      err.errors = { message: "Review couldn't be found" };
+      err.status = 404;
+      return next(err);
+    }
+
     static associate(models) {
       Review.belongsTo(models.Spot, {
         foreignKey: "spotId",

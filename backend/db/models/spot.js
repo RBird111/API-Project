@@ -3,6 +3,15 @@ const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
+    // Spot not found error
+    static notFound(next) {
+      const err = new Error("Spot couldn't be found");
+      err.title = "Spot couldn't be found";
+      err.errors = { message: "Spot couldn't be found" };
+      err.status = 404;
+      return next(err);
+    }
+
     static associate(models) {
       Spot.belongsTo(models.User, {
         foreignKey: "ownerId",

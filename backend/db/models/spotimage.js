@@ -1,7 +1,17 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class SpotImage extends Model {
+    // SpotImage not found error
+    static notFound(next) {
+      const err = new Error("Spot Image couldn't be found");
+      err.title = "Spot Image couldn't be found";
+      err.errors = { message: "Spot Image couldn't be found" };
+      err.status = 404;
+      return next(err);
+    }
+
     static associate(models) {
       SpotImage.belongsTo(models.Spot, {
         foreignKey: "spotId",
