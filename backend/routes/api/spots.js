@@ -12,14 +12,16 @@ const {
   sequelize,
 } = require("../../db/models");
 
+// Error moved to Spot model
+//
 // Spot not found error
-const spotNotFound = (next) => {
-  const err = new Error("Spot couldn't be found");
-  err.title = "Spot couldn't be found";
-  err.errors = { message: "Spot couldn't be found" };
-  err.status = 404;
-  return next(err);
-};
+// const spotNotFound = (next) => {
+//   const err = new Error("Spot couldn't be found");
+//   err.title = "Spot couldn't be found";
+//   err.errors = { message: "Spot couldn't be found" };
+//   err.status = 404;
+//   return next(err);
+// };
 
 // Validation for query parameters
 const validateQueryParams = [
@@ -180,7 +182,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
 router.get("/:spotId/reviews", async (req, res, next) => {
   // Check that spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Get reviews
   const reviews = await Review.findAll({
@@ -213,7 +215,7 @@ router.get("/:spotId/reviews", async (req, res, next) => {
 router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Check to see if user own's spot
   const ownSpot = req.user.id === spot.ownerId;
@@ -260,7 +262,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
 router.get("/:spotId", async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   const spotReviews = await Review.findOne({
     attributes: [
@@ -359,7 +361,7 @@ router.post("/", validateSpot, async (req, res, next) => {
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Check if authorized
   const auth = isAuthorized(req, spot.ownerId);
@@ -403,7 +405,7 @@ const validateReview = [
 router.post("/:spotId/reviews", validateReview, async (req, res, next) => {
   // Check that spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Check if user has already reviewed spot
   const userReviews = await spot.getReviews({
@@ -446,7 +448,7 @@ const validateBooking = [
 router.post("/:spotId/bookings", validateBooking, async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Forbid owner from booking spot
   if (req.user.id === spot.ownerId) {
@@ -482,7 +484,7 @@ router.post("/:spotId/bookings", validateBooking, async (req, res, next) => {
 router.put("/:spotId", validateSpot, async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Check if authorized
   const auth = isAuthorized(req, spot.ownerId);
@@ -513,7 +515,7 @@ router.put("/:spotId", validateSpot, async (req, res, next) => {
 router.delete("/:spotId", requireAuth, async (req, res, next) => {
   // Check if spot exists
   const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return spotNotFound(next);
+  if (!spot) return Spot.notFound(next);
 
   // Check if authorized
   const auth = isAuthorized(req, spot.ownerId);

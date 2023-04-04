@@ -10,27 +10,29 @@ const {
   SpotImage,
 } = require("../../db/models");
 
+// Errors moved to respective model files
+//
 // Review not found error
-const reviewNotFound = (next) => {
-  const err = new Error("Review couldn't be found");
-  err.title = "Review couldn't be found";
-  err.errors = { message: "Review couldn't be found" };
-  err.status = 404;
-  return next(err);
-};
+// const reviewNotFound = (next) => {
+//   const err = new Error("Review couldn't be found");
+//   err.title = "Review couldn't be found";
+//   err.errors = { message: "Review couldn't be found" };
+//   err.status = 404;
+//   return next(err);
+// };
 
 // Max images per review reached error
-const maxImagesReached = (next) => {
-  const err = new Error(
-    "Maximum number of images for this resource was reached"
-  );
-  err.title = "Maximum number of images for this resource was reached";
-  err.errors = {
-    message: "Maximum number of images for this resource was reached",
-  };
-  err.status = 403;
-  return next(err);
-};
+// const maxImagesReached = (next) => {
+//   const err = new Error(
+//     "Maximum number of images for this resource was reached"
+//   );
+//   err.title = "Maximum number of images for this resource was reached";
+//   err.errors = {
+//     message: "Maximum number of images for this resource was reached",
+//   };
+//   err.status = 403;
+//   return next(err);
+// };
 
 // Get all reviews for current user
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -89,7 +91,7 @@ const validateImage = [
 router.post("/:reviewId/images", validateImage, async (req, res, next) => {
   // Check that review exists
   const review = await Review.findByPk(req.params.reviewId);
-  if (!review) return reviewNotFound(next);
+  if (!review) return Review.notFound(next);
 
   // Check user permissions
   const auth = isAuthorized(req, review.toJSON().userId);
@@ -97,7 +99,7 @@ router.post("/:reviewId/images", validateImage, async (req, res, next) => {
 
   // Check that there are less than 10 images
   const reviewImages = await review.getReviewImages();
-  if (reviewImages.length > 10) return maxImagesReached(next);
+  if (reviewImages.length > 10) return ReviewImage.maxReached(next);
 
   // Create image
   let newImage = await ReviewImage.create({
@@ -132,7 +134,7 @@ const validateReview = [
 router.put("/:reviewId", validateReview, async (req, res, next) => {
   // Check if review exists
   const oldReview = await Review.findByPk(req.params.reviewId);
-  if (!oldReview) return reviewNotFound(next);
+  if (!oldReview) return Review.notFound(next);
 
   // Check user permissions
   const auth = isAuthorized(req, oldReview.toJSON().userId);
@@ -152,7 +154,7 @@ router.put("/:reviewId", validateReview, async (req, res, next) => {
 router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   // Check if review exists
   const review = await Review.findByPk(req.params.reviewId);
-  if (!review) return reviewNotFound(next);
+  if (!review) return Review.notFound(next);
 
   // Check user permissions
   const { userId } = review;
