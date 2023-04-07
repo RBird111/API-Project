@@ -20,8 +20,9 @@ router.use("/bookings", bookingsRouter);
 router.use("/spot-images", spotImageRouter);
 router.use("/review-images", reviewImageRouter);
 
-router.post("/test", (req, res) => {
-  res.json({ requestBody: req.body });
-});
+// Removed test route per frontend phase 0
+// router.post("/test", (req, res) => {
+//   res.json({ requestBody: req.body });
+// });
 
 module.exports = router;

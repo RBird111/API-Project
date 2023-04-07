@@ -12,17 +12,6 @@ const {
   sequelize,
 } = require("../../db/models");
 
-// Error moved to Spot model
-//
-// Spot not found error
-// const spotNotFound = (next) => {
-//   const err = new Error("Spot couldn't be found");
-//   err.title = "Spot couldn't be found";
-//   err.errors = { message: "Spot couldn't be found" };
-//   err.status = 404;
-//   return next(err);
-// };
-
 // Validation for query parameters
 const validateQueryParams = [
   query("page")

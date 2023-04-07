@@ -1,0 +1,8 @@
+/* TODO Add site wide styles */
+html {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.hidden {
+  display: none;
+}
