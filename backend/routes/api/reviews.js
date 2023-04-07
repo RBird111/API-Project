@@ -10,30 +10,6 @@ const {
   SpotImage,
 } = require("../../db/models");
 
-// Errors moved to respective model files
-//
-// Review not found error
-// const reviewNotFound = (next) => {
-//   const err = new Error("Review couldn't be found");
-//   err.title = "Review couldn't be found";
-//   err.errors = { message: "Review couldn't be found" };
-//   err.status = 404;
-//   return next(err);
-// };
-
-// Max images per review reached error
-// const maxImagesReached = (next) => {
-//   const err = new Error(
-//     "Maximum number of images for this resource was reached"
-//   );
-//   err.title = "Maximum number of images for this resource was reached";
-//   err.errors = {
-//     message: "Maximum number of images for this resource was reached",
-//   };
-//   err.status = 403;
-//   return next(err);
-// };
-
 // Get all reviews for current user
 router.get("/current", requireAuth, async (req, res, next) => {
   // Get user
