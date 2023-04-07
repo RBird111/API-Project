@@ -2,3 +2,7 @@
 html {
   font-family: "Courier New", Courier, monospace;
 }
+
+.hidden {
+  display: none;
+}
