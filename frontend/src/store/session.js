@@ -1,18 +1,18 @@
 import { csrfFetch } from "./csrf";
 
-const LOGIN = "session/LOGIN";
-const LOGOUT = "session/LOGOUT";
+const SET_USER = "session/LOGIN";
+const REMOVE_USER = "session/LOGOUT";
 
 const _login = (user) => {
   return {
-    type: LOGIN,
+    type: SET_USER,
     user,
   };
 };
 
 const _logout = () => {
   return {
-    type: LOGOUT,
+    type: REMOVE_USER,
   };
 };
 
@@ -55,11 +55,11 @@ const initialState = { user: null };
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
     // User is either null or contains a single user's info
-    case LOGIN: {
+    case SET_USER: {
       return { ...state, user: action.user };
     }
 
-    case LOGOUT: {
+    case REMOVE_USER: {
       return { ...state, user: null };
     }
 
