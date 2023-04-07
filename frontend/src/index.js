@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import * as sessionActions from "./store/session";
 import { restoreCSRF, csrfFetch } from "./store/csrf";
+import { ModalProvider, Modal } from "./context/Modal";
 import App from "./App";
 import "./index.css";
 
@@ -23,11 +24,14 @@ if (process.env.NODE_ENV !== "production") {
 
 const Root = () => {
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <ModalProvider>
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+          <Modal />
+        </BrowserRouter>
+      </Provider>
+    </ModalProvider>
   );
 };
 

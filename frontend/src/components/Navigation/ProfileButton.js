@@ -18,7 +18,6 @@ const ProfileButton = ({ user }) => {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      console.log("click");
       if (!ulRef.current.contains(e.target)) {
         setShowMenu(false);
       }
