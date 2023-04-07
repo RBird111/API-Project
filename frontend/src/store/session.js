@@ -29,36 +29,46 @@ export const login =
     });
 
     if (response.ok) {
-      const user = await response.json();
+      const { user } = await response.json();
       dispatch(_login(user));
 
       return user;
     }
+
+    return response;
   };
 
 // Log out action
 export const logout = () => async (dispatch) => {
-  const response = await fetch("/api/session", {
+  const response = await csrfFetch("/api/session", {
     method: "DELETE",
   });
 
   if (response.ok) {
-    const message = await response.json();
+    const { message } = await response.json();
     dispatch(_logout());
 
     return message;
   }
-};
 
-// Restore user info
-export const restoreUser = () => async (dispatch) => {
-  const response = await csrfFetch("/api/session");
-  const data = await response.json();
-  dispatch(_login(data.user));
   return response;
 };
 
-// Create new user
+// Restore user action
+export const restoreUser = () => async (dispatch) => {
+  const response = await csrfFetch("/api/session");
+
+  if (response.ok) {
+    const { user } = await response.json();
+    dispatch(_login(user));
+
+    return user;
+  }
+
+  return response;
+};
+
+// Create new user action
 export const signup = (user) => async (dispatch) => {
   const { username, firstName, lastName, email, password } = user;
 
