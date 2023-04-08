@@ -16,6 +16,7 @@ div.signup {
   form {
     display: flex;
     flex-direction: column;
+
     text-align: center;
   }
 
@@ -31,5 +32,7 @@ div.signup {
   button {
     margin-top: 20px;
     margin-bottom: 20px;
+
+    border-radius: 50px;
   }
 }

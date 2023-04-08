@@ -1,4 +1,11 @@
 .navigation {
+  display: flex;
+  justify-content: space-around;
+
+  .profile-dropdown {
+    position: absolute;
+  }
+
   .hidden {
     display: none;
   }
