@@ -7,6 +7,7 @@ import "./SignupForm.scss";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -15,7 +16,6 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -6,14 +6,19 @@ import Navigation from "./components/Navigation";
 
 function App() {
   const dispatch = useDispatch();
+
   const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
+      <nav className="header">
+        <Navigation isLoaded={isLoaded} />
+      </nav>
+
       {isLoaded && <Switch></Switch>}
     </>
   );
