@@ -11,11 +11,13 @@ function OpenModalMenuItem({
 
   const onClick = () => {
     if (onModalClose) setOnModalClose(onModalClose);
+
     setModalContent(modalComponent);
+
     if (onItemClick) onItemClick();
   };
 
-  return <li onClick={onClick}>{itemText}</li>;
+  return <p onClick={onClick}>{itemText}</p>;
 }
 
 export default OpenModalMenuItem;

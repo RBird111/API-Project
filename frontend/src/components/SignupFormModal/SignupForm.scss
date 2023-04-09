@@ -2,7 +2,7 @@ div.signup {
   width: 350px;
   margin: 0 auto;
 
-  border: 1px solid black;
+  // border: 1px solid black;
 
   display: flex;
   flex-direction: column;
@@ -16,6 +16,7 @@ div.signup {
   form {
     display: flex;
     flex-direction: column;
+
     text-align: center;
   }
 
@@ -31,5 +32,7 @@ div.signup {
   button {
     margin-top: 20px;
     margin-bottom: 20px;
+
+    border-radius: 50px;
   }
 }

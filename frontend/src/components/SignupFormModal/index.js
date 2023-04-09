@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
 import "./SignupForm.scss";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -13,10 +16,10 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (password === confirmPassword) {
       setErrors({});
       return dispatch(
@@ -36,6 +39,7 @@ function SignupFormModal() {
           }
         });
     }
+
     return setErrors({
       confirmPassword:
         "Confirm Password field must be the same as the Password field",
@@ -45,6 +49,7 @@ function SignupFormModal() {
   return (
     <div className="signup">
       <h1>Sign Up</h1>
+
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -55,7 +60,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.email && <p>{errors.email}</p>}
+
         <label>
           Username
           <input
@@ -65,7 +72,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.username && <p>{errors.username}</p>}
+
         <label>
           First Name
           <input
@@ -75,7 +84,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.firstName && <p>{errors.firstName}</p>}
+
         <label>
           Last Name
           <input
@@ -85,7 +96,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.lastName && <p>{errors.lastName}</p>}
+
         <label>
           Password
           <input
@@ -95,7 +108,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.password && <p>{errors.password}</p>}
+
         <label>
           Confirm Password
           <input
@@ -105,7 +120,9 @@ function SignupFormModal() {
             required
           />
         </label>
+
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+
         <button type="submit">Sign Up</button>
       </form>
     </div>
