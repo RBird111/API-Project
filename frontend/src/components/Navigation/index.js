@@ -4,14 +4,16 @@ import { useSelector } from "react-redux";
 
 import ProfileButton from "./ProfileButton";
 import "./Navigation.scss";
+import logo from "../../assets/airbnb_logo.svg";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
 
   return (
     <div className="navigation">
-      <NavLink exact to="/">
-        Home
+      <NavLink className="nav-logo" exact to="/">
+        <img src={logo} alt="logo" />
+        <h1>airbnb</h1>
       </NavLink>
 
       {isLoaded && <ProfileButton user={sessionUser} />}
