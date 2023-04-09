@@ -1,6 +1,9 @@
 .navigation {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: #808080 1px solid;
 
   .profile-button {
     display: flex;
@@ -9,6 +12,10 @@
     border-radius: 20px;
 
     padding: 4px;
+
+    margin-right: 30px;
+
+    cursor: pointer;
 
     svg {
       height: 30px;
@@ -31,20 +38,54 @@
 
   .profile-dropdown {
     position: absolute;
+    top: 84px;
+    right: 35px;
 
+    width: 140px;
+
+    background-color: white;
     border: 1px solid gray;
+    border-radius: 20px;
+    box-shadow: 0px 2px 3px gray;
 
     p {
-      padding: 0 5px;
+      padding: 0 8px;
+
+      cursor: pointer;
 
       button {
         border-radius: 50px;
         transform: translateX(50%);
       }
     }
+
+    p:hover {
+      background-color: lightgray;
+    }
   }
 
   .hidden {
     display: none;
+  }
+
+  .nav-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+
+    h1 {
+      color: #ff5a5f;
+      font-weight: bold;
+
+      margin-left: 5px;
+    }
+
+    img {
+      margin-left: 50px;
+
+      height: 40px;
+    }
   }
 }
