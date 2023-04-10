@@ -8,14 +8,18 @@ import SignupFormModal from "../SignupFormModal";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
+  // Open menu function
   const openMenu = () => {
     if (showMenu) return;
     setShowMenu(true);
   };
 
+  // useEffect that closes profile window, if open, when a click
+  // is registered outside the window
   useEffect(() => {
     if (!showMenu) return;
 
@@ -32,12 +36,14 @@ function ProfileButton({ user }) {
 
   const closeMenu = () => setShowMenu(false);
 
+  // logout action
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
   };
 
+  // login as Demo User action
   const loginDemo = (e) => {
     e.preventDefault();
     dispatch(
@@ -60,6 +66,7 @@ function ProfileButton({ user }) {
 
       <div className={ulClassName}>
         {user ? (
+          // if there is a logged in user
           <>
             <p>{user.username}</p>
 
@@ -74,6 +81,7 @@ function ProfileButton({ user }) {
             </div>
           </>
         ) : (
+          // if there is no logged in user
           <>
             <OpenModalMenuItem
               itemText="Log In"
