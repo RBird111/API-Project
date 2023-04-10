@@ -1,12 +1,12 @@
 import { csrfFetch } from "./csrf";
 
 // ---TYPES--- \\
-const GET_ALL_SPOTS = "spots/GET_ALL";
+const GET_SPOTS = "spots/GET_ALL";
 
 // ---ACTIONS--- \\
 const _getAllSpots = (spots) => {
   return {
-    type: GET_ALL_SPOTS,
+    type: GET_SPOTS,
     spots,
   };
 };
@@ -29,7 +29,7 @@ export const getAllSpots = () => async (dispatch) => {
 
 const spotReducer = (state = {}, action) => {
   switch (action.type) {
-    case GET_ALL_SPOTS: {
+    case GET_SPOTS: {
       return { ...state, ...action.spots };
     }
 
