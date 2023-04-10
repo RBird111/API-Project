@@ -13,7 +13,8 @@ function Navigation({ isLoaded }) {
     <div className="navigation">
       <NavLink className="nav-logo" exact to="/">
         <img src={logo} alt="logo" />
-        <h1>airbnb</h1>
+
+        <h1 className="airbnb-logo">airbnb</h1>
       </NavLink>
 
       {isLoaded && <ProfileButton user={sessionUser} />}

@@ -1,8 +1,10 @@
 import { csrfFetch } from "./csrf";
 
+// ---TYPES--- \\
 const SET_USER = "session/LOGIN";
 const REMOVE_USER = "session/LOGOUT";
 
+// ---ACTIONS--- \\
 const _login = (user) => {
   return {
     type: SET_USER,
@@ -15,6 +17,8 @@ const _logout = () => {
     type: REMOVE_USER,
   };
 };
+
+// ---ACTION DISPATCHERS--- \\
 
 // Log in action
 export const login =
@@ -88,6 +92,7 @@ export const signup = (user) => async (dispatch) => {
   return response;
 };
 
+// ---REDUCER--- \\
 const initialState = { user: null };
 
 const sessionReducer = (state = initialState, action) => {
