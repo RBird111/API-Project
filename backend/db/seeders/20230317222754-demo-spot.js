@@ -15,8 +15,8 @@ module.exports = {
         {
           ownerId: 1,
           address: "123 Test St.",
-          city: "City1",
-          state: "TS",
+          city: "Telluride",
+          state: "Colorado",
           country: "US",
           lat: 34.865,
           lng: -106.536,
@@ -27,8 +27,8 @@ module.exports = {
         {
           ownerId: 2,
           address: "456 Test St.",
-          city: "City2",
-          state: "TS",
+          city: "Granite Falls",
+          state: "Wyoming",
           country: "US",
           lat: 34.865,
           lng: -106.536,
@@ -39,14 +39,38 @@ module.exports = {
         {
           ownerId: 1,
           address: "789 Test St.",
-          city: "City3",
-          state: "TS",
+          city: "Shell Knob",
+          state: "Missouri",
           country: "US",
           lat: 34.865,
           lng: -106.536,
           name: "Spot3",
           description: "Description for Spot3",
-          price: 12700.25,
+          price: 830.0,
+        },
+        {
+          ownerId: 3,
+          address: "1789 Test St.",
+          city: "Indian River",
+          state: "Michigan",
+          country: "US",
+          lat: 34.865,
+          lng: -106.536,
+          name: "Spot4",
+          description: "Description for Spot4",
+          price: 592.56,
+        },
+        {
+          ownerId: 4,
+          address: "2789 Test St.",
+          city: "Blue Ridge",
+          state: "Georgia",
+          country: "US",
+          lat: 34.865,
+          lng: -106.536,
+          name: "Spot5",
+          description: "Description for Spot5",
+          price: 164.75,
         },
       ],
       {}
@@ -59,7 +83,7 @@ module.exports = {
     await queryInterface.bulkDelete(
       options,
       {
-        name: { [Op.in]: ["Spot1", "Spot2", "Spot3"] },
+        id: { [Op.in]: [1, 2, 3, 4, 5] },
       },
       {}
     );
