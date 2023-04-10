@@ -8,6 +8,7 @@ import "./SpotDetails.scss";
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
+
   const { spotId } = useParams();
 
   const [isLoaded, setIsLoaded] = useState(false);
