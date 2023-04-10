@@ -65,11 +65,3 @@ const spotReducer = (state = {}, action) => {
 };
 
 export default spotReducer;
-
-// npm install &&
-// npm run render-postbuild &&
-// npm run build &&
-// npm run sequelize --prefix backend db:seed:undo:all &&
-// npm run sequelize --prefix backend db:migrate:undo:all &&
-// npm run sequelize --prefix backend db:migrate &&
-// npm run sequelize --prefix backend db:seed:all

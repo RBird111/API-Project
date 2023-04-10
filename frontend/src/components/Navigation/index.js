@@ -10,7 +10,7 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
 
   return (
-    <div className="navigation">
+    <nav className="navigation">
       <NavLink className="nav-logo" exact to="/">
         <img src={logo} alt="logo" />
 
@@ -18,7 +18,7 @@ function Navigation({ isLoaded }) {
       </NavLink>
 
       {isLoaded && <ProfileButton user={sessionUser} />}
-    </div>
+    </nav>
   );
 }
 
