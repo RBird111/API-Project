@@ -1,0 +1,49 @@
+.spot-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 0 auto;
+
+  .preview-img {
+    padding: 5px;
+
+    width: 800px;
+    height: 600px;
+
+    object-fit: cover;
+  }
+
+  .img-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "i1 i2"
+      "i3 .";
+
+    max-width: 800px;
+    max-height: 600px;
+
+    padding: 5px;
+
+    img {
+      max-width: 380px;
+      max-height: 280px;
+
+    //   padding: 1.25px;
+      padding: 10px;
+    }
+
+    .i1 {
+      grid-area: i1;
+    }
+
+    .i2 {
+      grid-area: i2;
+    }
+
+    .i3 {
+      grid-area: i3;
+    }
+  }
+}
