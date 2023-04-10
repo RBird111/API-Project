@@ -3,20 +3,20 @@ import "./SpotCard.scss";
 const SpotCard = ({ spot }) => {
   return (
     <div className="spot-card">
-      <img src="https://placekitten.com/400/300" alt="placeholder" />
+      <img src={spot.previewImage} alt="placeholder" />
       <div>
         <p>
           {spot.city}, {spot.state}
         </p>
 
         <p>
-          <i className="fa-solid fa-star" style={{ color: "#ff5a5f" }} />
+          <i className="fa-solid fa-star" style={{ color: "#000" }} />
           {Number(spot.avgRating).toFixed(1)}
         </p>
       </div>
 
       <p>
-        <span style={{ fontWeight: "bold" }}>${spot.price}</span> night
+        <span style={{ fontWeight: "bold" }}>${Number(spot.price).toFixed(0)}</span> night
       </p>
     </div>
   );

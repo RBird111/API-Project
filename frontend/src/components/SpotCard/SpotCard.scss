@@ -9,5 +9,17 @@
     justify-content: space-between;
     align-items: center;
 
+    p {
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  img {
+    width: 400px;
+    height: 300px;
+
+    object-fit: cover;
   }
 }
