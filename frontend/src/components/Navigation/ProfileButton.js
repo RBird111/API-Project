@@ -38,14 +38,18 @@ function ProfileButton({ user }) {
     closeMenu();
   };
 
+  const loginDemo = (e) => {
+    e.preventDefault();
+    dispatch(
+      sessionActions.login({ credential: "Demo-lition", password: "password" })
+    );
+    closeMenu();
+  };
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <div ref={ulRef} onClick={openMenu}>
-      {/* <button onClick={openMenu}>
-        <i className="fa-sharp fa-regular fa-user" />
-      </button> */}
-
       <div className="profile-button">
         <i className="fa-solid fa-bars" />
 
@@ -82,6 +86,10 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
+
+            <div>
+              <button onClick={loginDemo}>Demo User</button>
+            </div>
           </>
         )}
       </div>
