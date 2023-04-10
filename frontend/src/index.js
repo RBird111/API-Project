@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import * as sessionActions from "./store/session";
+import * as spotActions from "./store/spot";
 import { restoreCSRF, csrfFetch } from "./store/csrf";
 import { ModalProvider, Modal } from "./context/Modal";
 import App from "./App";
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV !== "production") {
   window.csrfFetch = csrfFetch;
   window.store = store;
   window.sessionActions = sessionActions;
+  window.spotActions = spotActions;
 }
 
 const Root = () => {
