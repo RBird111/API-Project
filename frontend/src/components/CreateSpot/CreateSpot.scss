@@ -7,6 +7,13 @@
   justify-content: center;
   align-items: flex-start;
 
+  span.error {
+    color: #ff5a5f;
+    padding-left: 10px;
+
+    font-size: smaller;
+  }
+
   input {
     background-color: #e4e6ff;
   }
@@ -55,7 +62,7 @@
 
     p {
       padding: 5px;
-      padding-top: 15px;
+      // padding-top: 15px;
       margin: 0;
     }
 
@@ -73,6 +80,7 @@
 
     .state {
       width: 33%;
+      margin-left: 12px;
     }
 
     .lat {
@@ -81,6 +89,7 @@
 
     .lng {
       width: 48%;
+      margin-left: 15px;
     }
   }
 
