@@ -32,6 +32,10 @@ function App() {
           <Route path={`/spots/:spotId`}>
             <SpotDetails />
           </Route>
+
+          <Route>
+            <h1>Page Not Found</h1>
+          </Route>
         </Switch>
       )}
     </>

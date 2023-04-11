@@ -11,6 +11,22 @@
 
   background-color: white;
 
+  .profile-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      color: #808080;
+      text-decoration: none;
+      margin-right: 10px;
+
+      p {
+        margin: 0 auto;
+      }
+    }
+  }
+
   .profile-button {
     display: flex;
 
@@ -44,26 +60,43 @@
 
   .profile-dropdown {
     position: absolute;
-    top: 84px;
+    top: 55px;
     right: 35px;
 
-    width: 140px;
+    width: 200px;
 
     background-color: white;
     border: 1px solid gray;
     border-radius: 20px;
     box-shadow: 0px 2px 3px gray;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     p {
       padding: 0 8px;
+      margin: 5px auto;
       cursor: pointer;
+    }
+
+    a {
+      text-decoration: none;
+      color: #808080;
+      .manage-spot {
+        width: 100%;
+        box-sizing: border-box;
+        border-top: 1px solid gray;
+        border-bottom: 1px solid gray;
+      }
     }
 
     div {
       cursor: pointer;
 
       padding: 0 8px;
-      margin: 16px 0;
+      margin: 4px auto;
 
       display: flex;
       justify-content: center;

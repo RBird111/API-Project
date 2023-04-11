@@ -38,7 +38,21 @@ div.login {
     border: black 1px solid;
   }
 
+  button[disabled] {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    color: white;
+    background-color: #ababab;
+
+    border: black 1px solid;
+  }
+
   button:hover {
     box-shadow: 0px 2px 3px gray;
+  }
+
+  button[disabled]:hover {
+    box-shadow: none;
   }
 }

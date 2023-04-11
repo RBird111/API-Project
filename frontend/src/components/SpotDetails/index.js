@@ -17,18 +17,7 @@ const SpotDetails = () => {
     dispatch(getSpotDetails(spotId)).then(() => setIsLoaded(true));
   }, [dispatch, spotId]);
 
-  const spotDetails = useSelector((state) => state.spots.spotDetails);
-
-  // Spot details
-  let spot;
-  if (isLoaded) spot = spotDetails[spotId];
-
-  // Spot preview image
-  let imgUrl;
-  if (isLoaded)
-    imgUrl = Object.values(spot.SpotImages).find(
-      (obj) => obj.preview === true
-    ).url;
+  const spot = useSelector((state) => state.spots.spotDetails);
 
   return (
     <>
@@ -36,7 +25,15 @@ const SpotDetails = () => {
         {isLoaded && (
           <>
             <div className="spot-images">
-              <img className="preview-img" src={imgUrl} alt="spot" />
+              <img
+                className="preview-img"
+                src={
+                  Object.values(spot.SpotImages).find(
+                    (img) => img.preview === true
+                  )?.url
+                }
+                alt="spot"
+              />
 
               <div className="img-container">
                 {/* TODO replace placeholders */}
@@ -67,8 +64,11 @@ const SpotDetails = () => {
 
                 <p>
                   <i className="fa-solid fa-star" style={{ color: "#000" }} />
-                  {Number(spot.avgStarRating).toFixed(1)} &#x2022;{" "}
-                  {spot.numReviews} review{spot.numReviews > 1 && "s"}
+                  {spot.avgStarRating
+                    ? Number(spot.avgStarRating).toFixed(1)
+                    : "New Spot!"}{" "}
+                  &#x2022; {spot.numReviews} review
+                  {spot.numReviews !== 1 && "s"}
                 </p>
 
                 <button onClick={() => alert("Feature not yet implemented")}>
