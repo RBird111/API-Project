@@ -32,6 +32,13 @@ div.login {
     margin-top: 20px;
     margin-bottom: 20px;
 
-    border-radius: 50px;
+    color: white;
+    background-color: #ff5a5f;
+
+    border: black 1px solid;
+  }
+
+  button:hover {
+    box-shadow: 0px 2px 3px gray;
   }
 }
