@@ -66,7 +66,7 @@ const SpotDetails = () => {
                   <i className="fa-solid fa-star" style={{ color: "#000" }} />
                   {spot.avgStarRating
                     ? Number(spot.avgStarRating).toFixed(1)
-                    : "New Spot!"}{" "}
+                    : "New"}{" "}
                   &#x2022; {spot.numReviews} review
                   {spot.numReviews !== 1 && "s"}
                 </p>

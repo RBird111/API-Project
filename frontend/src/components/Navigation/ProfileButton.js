@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
@@ -49,7 +49,7 @@ function ProfileButton({ user }) {
   return (
     <div className="profile-group">
       {user && (
-        <NavLink to={"/"}>
+        <NavLink to={"/spots/new"}>
           <p>Create a New Spot</p>
         </NavLink>
       )}
