@@ -22,7 +22,7 @@ module.exports = {
           lng: -106.536,
           name: "Spot1",
           description:
-            "1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod te.",
           price: 900.25,
         },
         {
@@ -35,7 +35,7 @@ module.exports = {
           lng: -106.536,
           name: "Spot2",
           description:
-            "2Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "2Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod te.",
           price: 1900.25,
         },
         {
@@ -48,7 +48,7 @@ module.exports = {
           lng: -106.536,
           name: "Spot3",
           description:
-            "3Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "3Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod te.",
           price: 830.0,
         },
         {
@@ -61,7 +61,7 @@ module.exports = {
           lng: -106.536,
           name: "Spot4",
           description:
-            "4Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "4Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod te.",
           price: 592.56,
         },
         {
@@ -74,7 +74,7 @@ module.exports = {
           lng: -106.536,
           name: "Spot5",
           description:
-            "5Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "5Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod te.",
           price: 164.75,
         },
       ],
