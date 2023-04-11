@@ -71,7 +71,9 @@ const SpotDetails = () => {
                   {spot.numReviews} review{spot.numReviews > 1 && "s"}
                 </p>
 
-                <button>Reserve</button>
+                <button onClick={() => alert("Feature not yet implemented")}>
+                  Reserve
+                </button>
               </div>
             </div>
 
