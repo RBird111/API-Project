@@ -16,7 +16,10 @@ const SpotCard = ({ spot }) => {
       </div>
 
       <p>
-        <span style={{ fontWeight: "bold" }}>${Number(spot.price).toFixed(0)}</span> night
+        <span style={{ fontWeight: "bold" }}>
+          ${Number(spot.price).toFixed(0)}
+        </span>{" "}
+        night
       </p>
     </div>
   );

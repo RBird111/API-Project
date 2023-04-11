@@ -49,13 +49,31 @@ const SpotDetails = () => {
                   />
                 ))}
               </div>
-
-              <div className="spot-detail"></div>
             </div>
 
-            <div className="spot-desc"></div>
+            <div className="spot-detail">
+              <div className="description">
+                <h2>
+                  Hosted by {spot.Owner.firstName} {spot.Owner.lastName}
+                </h2>
 
-            <div className="reserve-btn"></div>
+                <p>{spot.description}</p>
+              </div>
+
+              <div className="booking">
+                <p>
+                  <span>${spot.price}</span> night
+                </p>
+
+                <p>
+                  <i className="fa-solid fa-star" style={{ color: "#000" }} />
+                  {Number(spot.avgStarRating).toFixed(1)} &#x2022;{" "}
+                  {spot.numReviews} review{spot.numReviews > 1 && "s"}
+                </p>
+
+                <button>Reserve</button>
+              </div>
+            </div>
 
             <div className="reviews"></div>
           </>
