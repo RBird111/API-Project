@@ -3,6 +3,8 @@ import { csrfFetch } from "./csrf";
 // ---TYPES--- \\
 const GET_SPOTS = "spots/GET_ALL";
 const GET_SPOT_DETAILS = "spots/DETAILS";
+const CREATE_SPOT = "spots/CREATE";
+const DELETE_SPOT = "spots/DELETE";
 
 // ---ACTIONS--- \\
 const _getAllSpots = (spots) => {
@@ -16,6 +18,20 @@ const _getSpotDetails = (spotDetails) => {
   return {
     type: GET_SPOT_DETAILS,
     spotDetails,
+  };
+};
+
+const _createSpot = (spot) => {
+  return {
+    type: CREATE_SPOT,
+    spot,
+  };
+};
+
+const _deleteSpot = (spotId) => {
+  return {
+    type: DELETE_SPOT,
+    spotId,
   };
 };
 
@@ -34,7 +50,8 @@ export const getAllSpots = () => async (dispatch) => {
     return spots;
   }
 
-  return response;
+  const errors = await response.json();
+  return errors;
 };
 
 export const getSpotDetails = (spotId) => async (dispatch) => {
@@ -53,9 +70,47 @@ export const getSpotDetails = (spotId) => async (dispatch) => {
     return spotDetails;
   }
 
-  return response;
+  const errors = await response.json();
+  return errors;
 };
 
+export const createSpot = (spot) => async (dispatch) => {
+  const response = await csrfFetch("/api/spots", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(spot),
+  });
+
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(_createSpot(spot));
+
+    return spot;
+  }
+
+  const errors = await response.json();
+  return errors;
+};
+
+export const deleteSpot = (spotId) => async (dispatch) => {
+  const resopnse = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "DELETE",
+  });
+
+  if (resopnse.ok) {
+    const { message } = await resopnse.json();
+    dispatch(_deleteSpot(spotId));
+
+    return message;
+  }
+
+  const errors = await resopnse.json();
+  return errors;
+};
+
+// ---REDUCER--- \\
 const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
   switch (action.type) {
     case GET_SPOTS: {
@@ -65,11 +120,24 @@ const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
     case GET_SPOT_DETAILS:
       return {
         ...state,
-        spotDetails: {
-          ...state.spotDetails,
-          [action.spotDetails.id]: action.spotDetails,
-        },
+        spotDetails:
+          // ...state.spotDetails,
+          // [action.spotDetails.id]: action.spotDetails,
+          action.spotDetails,
       };
+
+    case CREATE_SPOT: {
+      return {
+        ...state,
+        spotList: { ...state.spotList, [action.spot.id]: action.spot },
+      };
+    }
+
+    case DELETE_SPOT: {
+      const spotList = { ...state.spotList };
+      delete spotList[action.spotId];
+      return { ...state, spotList };
+    }
 
     default:
       return state;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as sessionActions from "../../store/session";
 import { useDispatch } from "react-redux";
 
@@ -7,11 +7,28 @@ import "./LoginForm.scss";
 
 function LoginFormModal() {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(() => {
+    const fieldsInvalid = !credential.length || !password.length;
+
+    if (fieldsInvalid) setDisabled(true);
+    else setDisabled(false);
+  }, [credential.length, password.length]);
+
+  // login as Demo User action
+  const loginDemo = (e) => {
+    e.preventDefault();
+    dispatch(
+      sessionActions.login({ credential: "Demo-lition", password: "password" })
+    );
+    closeModal();
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,8 +72,12 @@ function LoginFormModal() {
 
         {errors.credential && <p>{errors.credential}</p>}
 
-        <button type="submit">Log In</button>
+        <button type="submit" disabled={disabled}>
+          Log In
+        </button>
       </form>
+
+      <button onClick={loginDemo}>Demo User</button>
     </div>
   );
 }

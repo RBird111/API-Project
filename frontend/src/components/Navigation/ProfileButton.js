@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
+import { NavLink } from "react-router-dom";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -43,20 +44,17 @@ function ProfileButton({ user }) {
     closeMenu();
   };
 
-  // login as Demo User action
-  const loginDemo = (e) => {
-    e.preventDefault();
-    dispatch(
-      sessionActions.login({ credential: "Demo-lition", password: "password" })
-    );
-    closeMenu();
-  };
-
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
-    <div ref={ulRef} onClick={openMenu}>
-      <div className="profile-button">
+    <div className="profile-group">
+      {user && (
+        <NavLink to={"/"}>
+          <p>Create a New Spot</p>
+        </NavLink>
+      )}
+
+      <div className="profile-button" ref={ulRef} onClick={openMenu}>
         <i className="fa-solid fa-bars" />
 
         <svg viewBox="0 0 32 32">
@@ -68,13 +66,19 @@ function ProfileButton({ user }) {
         {user ? (
           // if there is a logged in user
           <>
-            <p>{user.username}</p>
+            <p>Hello, {user.username}</p>
 
-            <p>
+            {/* <p>
               {user.firstName} {user.lastName}
-            </p>
+            </p> */}
 
             <p>{user.email}</p>
+
+            <NavLink to={"/"}>
+              <div className="manage-spot">
+                <p>Manage Spots</p>
+              </div>
+            </NavLink>
 
             <div>
               <button onClick={logout}>Log Out</button>
@@ -94,10 +98,6 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-
-            <div>
-              <button onClick={loginDemo}>Demo User</button>
-            </div>
           </>
         )}
       </div>
