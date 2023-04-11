@@ -2,8 +2,6 @@ div.login {
   width: 350px;
   margin: 0 auto;
 
-  // border: 1px solid black;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,33 +24,5 @@ div.login {
 
   input {
     margin-bottom: 10px;
-  }
-
-  button {
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    color: white;
-    background-color: #ff5a5f;
-
-    border: black 1px solid;
-  }
-
-  button[disabled] {
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    color: white;
-    background-color: #ababab;
-
-    border: black 1px solid;
-  }
-
-  button:hover {
-    box-shadow: 0px 2px 3px gray;
-  }
-
-  button[disabled]:hover {
-    box-shadow: none;
   }
 }

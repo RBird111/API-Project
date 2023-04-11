@@ -6,3 +6,38 @@ html {
 body {
   margin-top: 0;
 }
+
+button {
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  color: white;
+  background-color: #ff5a5f;
+
+  border: black 1px solid;
+  border-radius: 10px;
+}
+
+button[disabled] {
+  cursor: default;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  color: white;
+  background-color: #ababab;
+
+  border: black 1px solid;
+}
+
+button:hover {
+  box-shadow: 0px 2px 3px gray;
+}
+
+button[disabled]:hover {
+  box-shadow: none;
+}

@@ -11,7 +11,7 @@ const SpotCard = ({ spot }) => {
 
         <p>
           <i className="fa-solid fa-star" style={{ color: "#000" }} />
-          {Number(spot.avgRating).toFixed(1)}
+          {Number(spot.avgRating) ? Number(spot.avgRating).toFixed(1) : "New"}
         </p>
       </div>
 
