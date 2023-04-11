@@ -19,6 +19,7 @@ const CreateSpot = () => {
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [errors, setErrors] = useState({});
 
   const [img1, setImg1] = useState("");
   const [img2, setImg2] = useState("");
@@ -26,6 +27,7 @@ const CreateSpot = () => {
   const [img4, setImg4] = useState("");
   const [img5, setImg5] = useState("");
 
+  // Auto fetch lat/lng from external api
   useEffect(() => {
     if (city && state) {
       window
@@ -53,6 +55,7 @@ const CreateSpot = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Create spot
     const spotDetails = {
       country,
       address,
@@ -65,26 +68,27 @@ const CreateSpot = () => {
       price,
     };
 
-    const spot = await dispatch(createSpot(spotDetails));
+    const spot = await dispatch(createSpot(spotDetails)).catch(async (e) => {
+      // If error set errors object
+      const fail = await e.json();
+      setErrors({ ...errors, ...fail.errors });
+    });
 
+    // Add images to spot
     const images = [img1, img2, img3, img4, img5];
     for (const idx in images) {
       if (images[idx]) {
-        console.log("idx ", idx);
-        let preview;
-
-        console.log("preview ", preview);
-
-        // eslint-disable-next-line eqeqeq
-        preview = idx === "0" ? true : false;
-
+        // If first image, set it to preview
+        let preview = idx === "0" ? true : false;
         await dispatch(addImageToSpot(spot.id, { url: images[idx], preview }));
       }
     }
 
-    await dispatch(getAllSpots());
-
     if (spot) {
+      // Get all spots (update landing page)
+      await dispatch(getAllSpots());
+
+      // Redirect to spot detail page
       history.push(`/spots/${spot.id}`);
     }
   };
@@ -103,83 +107,92 @@ const CreateSpot = () => {
         <div className="part1">
           <div className="country">
             <label htmlFor="country">
-              Country
+              <div>
+                <p>
+                  Country
+                  {errors.country && (
+                    <span className="error">{errors.country}</span>
+                  )}
+                </p>
+              </div>
               <input
                 type="text"
                 name="country"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                required
               />
             </label>
           </div>
 
           <div className="address">
             <label htmlFor="address">
-              Street Adress
+              <p>
+                Street Adress
+                {errors.address && (
+                  <span className="error">{errors.address}</span>
+                )}
+              </p>
               <input
                 type="text"
                 name="address"
                 value={address}
                 onChange={(e) => setAdress(e.target.value)}
-                required
               />
             </label>
           </div>
 
           <div className="city">
             <label htmlFor="city">
-              City
+              <p>
+                City
+                {errors.city && <span className="error">{errors.city}</span>}
+              </p>
               <input
                 type="text"
                 name="city"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                required
               />
             </label>
           </div>
 
-          <p>,</p>
+          {/* <p>,</p> */}
 
           <div className="state">
             <label htmlFor="state">
-              State
+              <p>
+                State
+                {errors.state && <span className="error">{errors.state}</span>}
+              </p>
+              <div></div>
               <input
                 type="text"
                 name="state"
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-                required
               />
             </label>
           </div>
 
           <div className="lat">
             <label htmlFor="lat">
-              Latitude
-              <input
-                type="text"
-                name="lat"
-                value={lat}
-                onChange={(e) => {}}
-                required
-              />
+              <p>
+                Latitude
+                {errors.lat && <span className="error">{errors.lat}</span>}
+              </p>
+              <input type="text" name="lat" value={lat} onChange={(e) => {}} />
             </label>
           </div>
 
-          <p>,</p>
+          {/* <p>,</p> */}
 
           <div className="lng">
             <label htmlFor="lng">
-              Longitude
-              <input
-                type="text"
-                name="lng"
-                value={lng}
-                onChange={(e) => {}}
-                required
-              />
+              <p>
+                Longitude
+                {errors.lng && <span className="error">{errors.lng}</span>}
+              </p>
+              <input type="text" name="lng" value={lng} onChange={(e) => {}} />
             </label>
           </div>
         </div>
@@ -192,7 +205,7 @@ const CreateSpot = () => {
             fast wif or parking, and what you love about the neighborhood.
           </p>
 
-          <label htmlFor="desc">
+          <label htmlFor="description">
             <textarea
               placeholder="Please write at least 30 characters"
               style={{ height: "100px", width: "95%" }}
@@ -240,9 +253,8 @@ const CreateSpot = () => {
           <p>Submit a link to at least one photo to publish your spot.</p>
 
           <input
-            type="text"
             placeholder="Preview Image URL"
-            required
+            type="text"
             value={img1}
             onChange={(e) => setImg1(e.target.value)}
           />
