@@ -41,7 +41,13 @@ export const getSpotDetails = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
 
   if (response.ok) {
-    const spotDetails = await response.json();
+    const SpotDetails = await response.json();
+
+    const SpotImages = {};
+    SpotDetails.SpotImages.forEach((img) => (SpotImages[img.id] = img));
+
+    const spotDetails = { ...SpotDetails, SpotImages };
+
     dispatch(_getSpotDetails(spotDetails));
 
     return spotDetails;
@@ -50,14 +56,20 @@ export const getSpotDetails = (spotId) => async (dispatch) => {
   return response;
 };
 
-const spotReducer = (state = {}, action) => {
+const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
   switch (action.type) {
     case GET_SPOTS: {
-      return { ...state, ...action.spots };
+      return { ...state, spotList: { ...state.spotList, ...action.spots } };
     }
 
     case GET_SPOT_DETAILS:
-      return { ...state, [action.spotDetails.id]: action.spotDetails };
+      return {
+        ...state,
+        spotDetails: {
+          ...state.spotDetails,
+          [action.spotDetails.id]: action.spotDetails,
+        },
+      };
 
     default:
       return state;
