@@ -7,6 +7,7 @@ const CREATE_SPOT = "spots/CREATE";
 const DELETE_SPOT = "spots/DELETE";
 const ADD_IMAGE_TO_SPOT = "spots/ADD_IMAGE";
 const UPDATE_SPOT = "spots/UPDATE";
+const USER_SPOTS = "spots/USER_SPOTS";
 
 // ---ACTIONS--- \\
 const _getAllSpots = (spots) => {
@@ -48,6 +49,13 @@ const _updateSpot = (spot) => {
   return {
     type: UPDATE_SPOT,
     spot,
+  };
+};
+
+const _getUserSpots = (spots) => {
+  return {
+    type: USER_SPOTS,
+    spots,
   };
 };
 
@@ -160,8 +168,29 @@ export const updateSpot = (spotId, spot) => async (dispatch) => {
   return errors;
 };
 
+export const getUserSpots = (user) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/current`, { user });
+
+  if (response.ok) {
+    const { Spots } = await response.json();
+
+    const spots = {};
+    Spots.forEach((spot) => (spots[spot.id] = spot));
+
+    dispatch(_getUserSpots(spots));
+
+    return spots;
+  }
+
+  const errors = await response.json();
+  return errors;
+};
+
 // ---REDUCER--- \\
-const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
+const spotReducer = (
+  state = { spotList: {}, spotDetails: {}, userSpots: {} },
+  action
+) => {
   switch (action.type) {
     case GET_SPOTS: {
       return { ...state, spotList: { ...state.spotList, ...action.spots } };
@@ -205,6 +234,10 @@ const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
         ...state,
         spotList: { ...state.spotList, [action.spot.id]: action.spot },
       };
+    }
+
+    case USER_SPOTS: {
+      return { ...state, userSpots: action.spots };
     }
 
     default:
