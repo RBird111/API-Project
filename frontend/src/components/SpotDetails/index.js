@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { getSpotDetails } from "../../store/spot";
 import "./SpotDetails.scss";
 import SpotReviews from "../SpotReviews";
+import { getSpotReviews } from "../../store/reviews";
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
@@ -15,7 +16,9 @@ const SpotDetails = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getSpotDetails(spotId)).then(() => setIsLoaded(true));
+    dispatch(getSpotDetails(spotId))
+      .then(() => dispatch(getSpotReviews(spotId)))
+      .then(() => setIsLoaded(true));
   }, [dispatch, spotId]);
 
   const spot = useSelector((state) => state.spots.spotDetails);
