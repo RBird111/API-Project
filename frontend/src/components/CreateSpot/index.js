@@ -19,13 +19,18 @@ const CreateSpot = () => {
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-  const [errors, setErrors] = useState({});
 
   const [img1, setImg1] = useState("");
   const [img2, setImg2] = useState("");
   const [img3, setImg3] = useState("");
   const [img4, setImg4] = useState("");
   const [img5, setImg5] = useState("");
+
+  // Holds errors until submit
+  const [validations, setValidations] = useState({});
+
+  // Holds errors after submit
+  const [errors, setErrors] = useState({});
 
   // Auto fetch lat/lng from external api
   useEffect(() => {
@@ -52,10 +57,70 @@ const CreateSpot = () => {
     }
   }, [city, state]);
 
+  // Handle validation
+  useEffect(() => {
+    setValidations({});
+
+    const errorObj = {};
+
+    if (!country.length) errorObj.country = "Country is required";
+    if (!address.length) errorObj.address = "Address is required";
+    if (!city.length) errorObj.city = "City is required";
+    if (!state.length) errorObj.state = "State is required";
+    if (!lat) errorObj.lat = "Latitude is required";
+    if (!lng) errorObj.lng = "Longitude is required";
+    if (description.length < 30)
+      errorObj.description = "Description needs a minimum of 30 characters";
+    if (!name.length) errorObj.name = "Name is required";
+    if (!price.length) errorObj.price = "Price is required";
+
+    //Image errors
+    const images = [img1, img2, img3, img4, img5];
+    for (let i = 0; i < images.length; i++) {
+      if (images[i].length > 0 && !images[i].match(/(.png|.jpg|.jpeg)$/g))
+        errorObj[`img${i + 1}`] = "Image URL must end in .png, .jpg, or .jpeg";
+
+      if (i === 0 && !images[i].length)
+        errorObj.img1 = "Preview image is required";
+    }
+
+    setValidations({ ...errorObj });
+  }, [
+    address.length,
+    city.length,
+    country.length,
+    description.length,
+    img1,
+    img1.length,
+    img2,
+    img3,
+    img4,
+    img5,
+    lat,
+    lat.length,
+    lng,
+    lng.length,
+    name.length,
+    price.length,
+    state.length,
+  ]);
+
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create spot
+    // Set errors
+    setErrors({ ...validations });
+
+    // If there are errors alert user and return
+    if (Object.values(validations).length > 0) {
+      alert(
+        "There are some errors in your submission. Please correct them before resubmitting."
+      );
+
+      return;
+    }
+
     const spotDetails = {
       country,
       address,
@@ -68,11 +133,8 @@ const CreateSpot = () => {
       price,
     };
 
-    const spot = await dispatch(createSpot(spotDetails)).catch(async (e) => {
-      // If error set errors object
-      const fail = await e.json();
-      setErrors({ ...errors, ...fail.errors });
-    });
+    // Create spot
+    const spot = await dispatch(createSpot(spotDetails));
 
     // Add images to spot
     const images = [img1, img2, img3, img4, img5];
@@ -212,6 +274,9 @@ const CreateSpot = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+            {errors.description && (
+              <span className="error">{errors.description}</span>
+            )}
           </label>
         </div>
 
@@ -229,6 +294,7 @@ const CreateSpot = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          {errors.name && <span className="error">{errors.name}</span>}
         </div>
 
         <div className="part4">
@@ -245,6 +311,7 @@ const CreateSpot = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
+          {errors.price && <span className="error">{errors.price}</span>}
         </div>
 
         <div className="part5">
@@ -258,6 +325,7 @@ const CreateSpot = () => {
             value={img1}
             onChange={(e) => setImg1(e.target.value)}
           />
+          {errors.img1 && <span className="error">{errors.img1}</span>}
 
           <input
             type="text"
@@ -265,6 +333,7 @@ const CreateSpot = () => {
             value={img2}
             onChange={(e) => setImg2(e.target.value)}
           />
+          {errors.img2 && <span className="error">{errors.img2}</span>}
 
           <input
             type="text"
@@ -272,6 +341,7 @@ const CreateSpot = () => {
             value={img3}
             onChange={(e) => setImg3(e.target.value)}
           />
+          {errors.img3 && <span className="error">{errors.img3}</span>}
 
           <input
             type="text"
@@ -279,6 +349,7 @@ const CreateSpot = () => {
             value={img4}
             onChange={(e) => setImg4(e.target.value)}
           />
+          {errors.img4 && <span className="error">{errors.img4}</span>}
 
           <input
             type="text"
@@ -286,6 +357,7 @@ const CreateSpot = () => {
             value={img5}
             onChange={(e) => setImg5(e.target.value)}
           />
+          {errors.img5 && <span className="error">{errors.img5}</span>}
         </div>
 
         <button type="submit">Create Spot</button>
