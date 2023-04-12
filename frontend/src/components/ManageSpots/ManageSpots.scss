@@ -3,6 +3,15 @@
   flex-wrap: wrap;
   justify-content: space-around;
 
+  .manage-header {
+    width: 100%;
+
+    h1,
+    button {
+      margin: 5px 0;
+    }
+  }
+
   .spot-card {
     cursor: pointer;
   }

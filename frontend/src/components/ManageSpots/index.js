@@ -8,7 +8,6 @@ import SpotCard from "../SpotCard";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
-  //   const user = useSelector((state) => state.session.user);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -19,6 +18,14 @@ const ManageSpots = () => {
 
   return (
     <div className="manage-spots">
+      <div className="manage-header">
+        <h1>Manage Your Spots</h1>
+
+        <NavLink to={"/spots/new"}>
+          <button>Create a New Spot</button>
+        </NavLink>
+      </div>
+
       {isLoaded &&
         Object.values(spots).map((spot) => (
           <div key={spot.id}>
@@ -30,11 +37,10 @@ const ManageSpots = () => {
               <button>Update</button>
 
               <button
-                onClick={() =>
-                  dispatch(deleteSpot(spot.id)).then(() =>
-                    dispatch(getUserSpots())
-                  )
-                }
+                onClick={async () => {
+                  await dispatch(deleteSpot(spot.id));
+                  await dispatch(getUserSpots());
+                }}
               >
                 Delete
               </button>
