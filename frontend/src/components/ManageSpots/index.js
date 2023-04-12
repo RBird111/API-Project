@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 import "./ManageSpots.scss";
-import { getUserSpots } from "../../store/spot";
+import { deleteSpot, getUserSpots } from "../../store/spot";
 import SpotCard from "../SpotCard";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.session.user);
+  //   const user = useSelector((state) => state.session.user);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getUserSpots(user)).then(() => setIsLoaded(true));
-  }, [dispatch, user]);
+    dispatch(getUserSpots()).then(() => setIsLoaded(true));
+  }, [dispatch]);
 
   const spots = useSelector((state) => state.spots.userSpots);
 
@@ -29,7 +29,15 @@ const ManageSpots = () => {
             <div className="manage-buttons">
               <button>Update</button>
 
-              <button>Delete</button>
+              <button
+                onClick={() =>
+                  dispatch(deleteSpot(spot.id)).then(() =>
+                    dispatch(getUserSpots())
+                  )
+                }
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
