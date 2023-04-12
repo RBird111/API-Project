@@ -69,7 +69,7 @@ const SpotDetails = () => {
 
               <div className="booking">
                 <p>
-                  <span>${spot.price}</span> night
+                  <span>${Number(spot.price).toFixed(0)} </span> night
                 </p>
 
                 <p>
