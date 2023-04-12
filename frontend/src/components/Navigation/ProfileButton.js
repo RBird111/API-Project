@@ -74,7 +74,7 @@ function ProfileButton({ user }) {
 
             <p>{user.email}</p>
 
-            <NavLink to={"/"}>
+            <NavLink to={"/spots/current"}>
               <div className="manage-spot">
                 <p>Manage Spots</p>
               </div>

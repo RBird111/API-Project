@@ -1,0 +1,19 @@
+.manage-spots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  .spot-card {
+    cursor: pointer;
+  }
+
+  .spot-card:hover {
+    box-shadow: 0px 2px 3px gray;
+  }
+
+  .manage-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+}
