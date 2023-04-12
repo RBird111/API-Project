@@ -1,30 +1,27 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
 
-import "./CreateSpot.scss";
-import states from "./states";
-import { addImageToSpot, createSpot, getAllSpots } from "../../store/spot";
+import "./UpdateSpot.scss";
+import states from "../CreateSpot/states";
+import { getAllSpots, updateSpot } from "../../store/spot";
 
-const CreateSpot = () => {
+const UpdateSpot = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [country, setCountry] = useState("");
-  const [address, setAdress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const { spotId } = useParams();
+  const currSpot = useSelector((state) => state.spots.spotDetails);
 
-  const [img1, setImg1] = useState("");
-  const [img2, setImg2] = useState("");
-  const [img3, setImg3] = useState("");
-  const [img4, setImg4] = useState("");
-  const [img5, setImg5] = useState("");
+  const [country, setCountry] = useState(currSpot.country);
+  const [address, setAdress] = useState(currSpot.address);
+  const [city, setCity] = useState(currSpot.city);
+  const [state, setState] = useState(currSpot.state);
+  const [lat, setLat] = useState(currSpot.lat);
+  const [lng, setLng] = useState(currSpot.lng);
+  const [description, setDescription] = useState(currSpot.description);
+  const [name, setName] = useState(currSpot.name);
+  const [price, setPrice] = useState(currSpot.price);
 
   // Holds errors until submit
   const [validations, setValidations] = useState({});
@@ -69,39 +66,13 @@ const CreateSpot = () => {
     if (!state.length) errorObj.state = "State is required";
     if (!lat) errorObj.lat = "Latitude is required";
     if (!lng) errorObj.lng = "Longitude is required";
-    if (description.length < 30)
+    if (description && description.length < 30)
       errorObj.description = "Description needs a minimum of 30 characters";
     if (!name.length) errorObj.name = "Name is required";
     if (!price) errorObj.price = "Price is required";
 
-    //Image errors
-    const images = [img1, img2, img3, img4, img5];
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].length > 0 && !images[i].match(/(.png|.jpg|.jpeg)$/g))
-        errorObj[`img${i + 1}`] = "Image URL must end in .png, .jpg, or .jpeg";
-
-      if (i === 0 && !images[i].length)
-        errorObj.img1 = "Preview image is required";
-    }
-
     setValidations({ ...errorObj });
-  }, [
-    address.length,
-    city.length,
-    country.length,
-    description.length,
-    img1,
-    img1.length,
-    img2,
-    img3,
-    img4,
-    img5,
-    lat,
-    lng,
-    name.length,
-    price,
-    state.length,
-  ]);
+  }, [address, city, country, description, lat, lng, name, price, state]);
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -132,17 +103,7 @@ const CreateSpot = () => {
     };
 
     // Create spot
-    const spot = await dispatch(createSpot(spotDetails));
-
-    // Add images to spot
-    const images = [img1, img2, img3, img4, img5];
-    for (const idx in images) {
-      if (images[idx]) {
-        // If first image, set it to preview
-        let preview = idx === "0" ? true : false;
-        await dispatch(addImageToSpot(spot.id, { url: images[idx], preview }));
-      }
-    }
+    const spot = await dispatch(updateSpot(spotId, spotDetails));
 
     if (spot) {
       // Get all spots (update landing page)
@@ -312,56 +273,10 @@ const CreateSpot = () => {
           {errors.price && <span className="error">{errors.price}</span>}
         </div>
 
-        <div className="part5">
-          <h3>Liven up your spot with photos</h3>
-
-          <p>Submit a link to at least one photo to publish your spot.</p>
-
-          <input
-            placeholder="Preview Image URL"
-            type="text"
-            value={img1}
-            onChange={(e) => setImg1(e.target.value)}
-          />
-          {errors.img1 && <span className="error">{errors.img1}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img2}
-            onChange={(e) => setImg2(e.target.value)}
-          />
-          {errors.img2 && <span className="error">{errors.img2}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img3}
-            onChange={(e) => setImg3(e.target.value)}
-          />
-          {errors.img3 && <span className="error">{errors.img3}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img4}
-            onChange={(e) => setImg4(e.target.value)}
-          />
-          {errors.img4 && <span className="error">{errors.img4}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img5}
-            onChange={(e) => setImg5(e.target.value)}
-          />
-          {errors.img5 && <span className="error">{errors.img5}</span>}
-        </div>
-
-        <button type="submit">Create Spot</button>
+        <button type="submit">Update Spot</button>
       </form>
     </div>
   );
 };
 
-export default CreateSpot;
+export default UpdateSpot;

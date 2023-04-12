@@ -6,6 +6,7 @@ const GET_SPOT_DETAILS = "spots/DETAILS";
 const CREATE_SPOT = "spots/CREATE";
 const DELETE_SPOT = "spots/DELETE";
 const ADD_IMAGE_TO_SPOT = "spots/ADD_IMAGE";
+const UPDATE_SPOT = "spots/UPDATE";
 
 // ---ACTIONS--- \\
 const _getAllSpots = (spots) => {
@@ -40,6 +41,13 @@ const _addImageToSpot = (image) => {
   return {
     type: ADD_IMAGE_TO_SPOT,
     image,
+  };
+};
+
+const _updateSpot = (spot) => {
+  return {
+    type: UPDATE_SPOT,
+    spot,
   };
 };
 
@@ -85,9 +93,7 @@ export const getSpotDetails = (spotId) => async (dispatch) => {
 export const createSpot = (spot) => async (dispatch) => {
   const response = await csrfFetch("/api/spots", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(spot),
   });
 
@@ -121,9 +127,7 @@ export const deleteSpot = (spotId) => async (dispatch) => {
 export const addImageToSpot = (spotId, image) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}/images`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(image),
   });
 
@@ -135,6 +139,24 @@ export const addImageToSpot = (spotId, image) => async (dispatch) => {
   }
 
   const errors = response.json();
+  return errors;
+};
+
+export const updateSpot = (spotId, spot) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(spot),
+  });
+
+  if (response.ok) {
+    const spot = await response.json();
+    dispatch(_updateSpot(spot));
+
+    return spot;
+  }
+
+  const errors = await response.json();
   return errors;
 };
 
@@ -176,6 +198,13 @@ const spotReducer = (state = { spotList: {}, spotDetails: {} }, action) => {
         },
       };
       return { ...state, spotDetails: { ...spotDetails } };
+    }
+
+    case UPDATE_SPOT: {
+      return {
+        ...state,
+        spotList: { ...state.spotList, [action.spot.id]: action.spot },
+      };
     }
 
     default:
