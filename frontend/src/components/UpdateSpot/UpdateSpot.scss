@@ -1,0 +1,131 @@
+.create-spot {
+  margin: 0 auto;
+  width: 500px;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+
+  span.error {
+    color: #ff5a5f;
+    padding-left: 10px;
+
+    font-size: smaller;
+  }
+
+  input {
+    background-color: #e4e6ff;
+  }
+
+  h2 {
+    width: 100%;
+  }
+
+  h3 {
+    width: 100%;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    text-align: center;
+
+    width: 100%;
+  }
+
+  .part1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+
+    border-bottom: 1px #808080 solid;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+
+      width: 100%;
+    }
+
+    input {
+      margin-bottom: 10px;
+
+      width: 98%;
+    }
+
+    p {
+      padding: 5px;
+      // padding-top: 15px;
+      margin: 0;
+    }
+
+    .country {
+      width: 100%;
+    }
+
+    .address {
+      width: 100%;
+    }
+
+    .city {
+      width: 63%;
+    }
+
+    .state {
+      width: 33%;
+      margin-left: 12px;
+    }
+
+    .lat {
+      width: 48%;
+    }
+
+    .lng {
+      width: 48%;
+      margin-left: 15px;
+    }
+  }
+
+  .part2 {
+    border-bottom: 1px #808080 solid;
+    padding-bottom: 10px;
+
+    textarea {
+      background-color: #e4e6ff;
+    }
+  }
+
+  .part3 {
+    border-bottom: 1px #808080 solid;
+    padding-bottom: 10px;
+
+    .name {
+      width: 97%;
+    }
+  }
+
+  .part4 {
+    border-bottom: 1px #808080 solid;
+    padding-bottom: 10px;
+
+    .price {
+      width: 94%;
+    }
+  }
+
+  .part5 {
+    border-bottom: 1px #808080 solid;
+    padding-bottom: 10px;
+
+    input {
+      width: 98%;
+    }
+  }
+}
