@@ -34,7 +34,9 @@ const ManageSpots = () => {
             </NavLink>
 
             <div className="manage-buttons">
-              <button>Update</button>
+              <NavLink to={`/spots/${spot.id}/edit`}>
+                <button>Update</button>
+              </NavLink>
 
               <button
                 onClick={async () => {
