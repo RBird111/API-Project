@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { getSpotDetails } from "../../store/spot";
 import "./SpotDetails.scss";
+import SpotReviews from "../SpotReviews";
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
@@ -26,7 +27,9 @@ const SpotDetails = () => {
           <>
             <div>
               <h1>{spot.name}</h1>
-              <p>{spot.city}, {spot.state}, {spot.country}</p>
+              <p>
+                {spot.city}, {spot.state}, {spot.country}
+              </p>
             </div>
             <div className="spot-images">
               <img
@@ -81,7 +84,9 @@ const SpotDetails = () => {
               </div>
             </div>
 
-            <div className="reviews"></div>
+            <div className="reviews">
+              <SpotReviews />
+            </div>
           </>
         )}
       </div>
