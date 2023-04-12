@@ -17,11 +17,7 @@ const UpdateSpot = () => {
 
   if (!isLoaded) return null;
 
-  return (
-    <>
-      <UpdateSpotPage currSpot={currSpot} />
-    </>
-  );
+  return <UpdateSpotPage currSpot={currSpot} />;
 };
 
 export default UpdateSpot;

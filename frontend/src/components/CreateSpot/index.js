@@ -86,21 +86,20 @@ const CreateSpot = () => {
 
     setValidations({ ...errorObj });
   }, [
-    address.length,
-    city.length,
-    country.length,
-    description.length,
+    address,
+    city,
+    country,
+    description,
     img1,
-    img1.length,
     img2,
     img3,
     img4,
     img5,
     lat,
     lng,
-    name.length,
+    name,
     price,
-    state.length,
+    state,
   ]);
 
   // Handle form submit
