@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 
 import { getSpotDetails } from "../../store/spot";
 import "./SpotDetails.scss";
+import SpotReviews from "../SpotReviews";
+import { getSpotReviews } from "../../store/reviews";
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
@@ -14,7 +16,9 @@ const SpotDetails = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getSpotDetails(spotId)).then(() => setIsLoaded(true));
+    dispatch(getSpotDetails(spotId))
+      .then(() => dispatch(getSpotReviews(spotId)))
+      .then(() => setIsLoaded(true));
   }, [dispatch, spotId]);
 
   const spot = useSelector((state) => state.spots.spotDetails);
@@ -24,6 +28,12 @@ const SpotDetails = () => {
       <div className="spot-details">
         {isLoaded && (
           <>
+            <div>
+              <h1>{spot.name}</h1>
+              <p>
+                {spot.city}, {spot.state}, {spot.country}
+              </p>
+            </div>
             <div className="spot-images">
               <img
                 className="preview-img"
@@ -59,7 +69,7 @@ const SpotDetails = () => {
 
               <div className="booking">
                 <p>
-                  <span>${spot.price}</span> night
+                  <span>${Number(spot.price).toFixed(0)} </span> night
                 </p>
 
                 <p>
@@ -77,7 +87,9 @@ const SpotDetails = () => {
               </div>
             </div>
 
-            <div className="reviews"></div>
+            <div className="reviews">
+              <SpotReviews />
+            </div>
           </>
         )}
       </div>

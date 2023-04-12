@@ -187,10 +187,9 @@ export const getUserSpots = () => async (dispatch) => {
 };
 
 // ---REDUCER--- \\
-const spotReducer = (
-  state = { spotList: {}, spotDetails: {}, userSpots: {} },
-  action
-) => {
+const initialState = { spotList: {}, spotDetails: {}, userSpots: {} };
+
+const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SPOTS: {
       return { ...state, spotList: { ...state.spotList, ...action.spots } };

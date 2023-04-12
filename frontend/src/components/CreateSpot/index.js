@@ -86,21 +86,20 @@ const CreateSpot = () => {
 
     setValidations({ ...errorObj });
   }, [
-    address.length,
-    city.length,
-    country.length,
-    description.length,
+    address,
+    city,
+    country,
+    description,
     img1,
-    img1.length,
     img2,
     img3,
     img4,
     img5,
     lat,
     lng,
-    name.length,
+    name,
     price,
-    state.length,
+    state,
   ]);
 
   // Handle form submit
@@ -112,9 +111,9 @@ const CreateSpot = () => {
 
     // If there are errors alert user and return
     if (Object.values(validations).length > 0) {
-      alert(
-        "There are some errors in your submission. Please correct them before resubmitting."
-      );
+      // alert(
+      //   "There are some errors in your submission. Please correct them before resubmitting."
+      // );
 
       return;
     }
