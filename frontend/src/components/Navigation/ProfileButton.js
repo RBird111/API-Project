@@ -5,10 +5,11 @@ import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
@@ -42,6 +43,7 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    history.push("/");
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -74,7 +76,7 @@ function ProfileButton({ user }) {
 
             <p>{user.email}</p>
 
-            <NavLink to={"/"}>
+            <NavLink to={"/spots/current"}>
               <div className="manage-spot">
                 <p>Manage Spots</p>
               </div>

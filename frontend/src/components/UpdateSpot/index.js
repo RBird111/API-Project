@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import "./UpdateSpot.scss";
 import states from "../CreateSpot/states";
-import { getAllSpots, updateSpot } from "../../store/spot";
+import { getAllSpots, getSpotDetails, updateSpot } from "../../store/spot";
 
 const UpdateSpot = () => {
   const dispatch = useDispatch();
@@ -12,6 +12,11 @@ const UpdateSpot = () => {
 
   const { spotId } = useParams();
   const currSpot = useSelector((state) => state.spots.spotDetails);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    dispatch(getSpotDetails(spotId)).then(() => setIsLoaded(true));
+  });
 
   const [country, setCountry] = useState(currSpot.country);
   const [address, setAdress] = useState(currSpot.address);
@@ -58,21 +63,34 @@ const UpdateSpot = () => {
   useEffect(() => {
     setValidations({});
 
-    const errorObj = {};
+    if (isLoaded) {
+      const errorObj = {};
 
-    if (!country.length) errorObj.country = "Country is required";
-    if (!address.length) errorObj.address = "Address is required";
-    if (!city.length) errorObj.city = "City is required";
-    if (!state.length) errorObj.state = "State is required";
-    if (!lat) errorObj.lat = "Latitude is required";
-    if (!lng) errorObj.lng = "Longitude is required";
-    if (description && description.length < 30)
-      errorObj.description = "Description needs a minimum of 30 characters";
-    if (!name.length) errorObj.name = "Name is required";
-    if (!price) errorObj.price = "Price is required";
+      if (!country.length) errorObj.country = "Country is required";
+      if (!address.length) errorObj.address = "Address is required";
+      if (!city.length) errorObj.city = "City is required";
+      if (!state.length) errorObj.state = "State is required";
+      if (!lat) errorObj.lat = "Latitude is required";
+      if (!lng) errorObj.lng = "Longitude is required";
+      if (description && description.length < 30)
+        errorObj.description = "Description needs a minimum of 30 characters";
+      if (!name.length) errorObj.name = "Name is required";
+      if (!price) errorObj.price = "Price is required";
 
-    setValidations({ ...errorObj });
-  }, [address, city, country, description, lat, lng, name, price, state]);
+      setValidations({ ...errorObj });
+    }
+  }, [
+    address,
+    city,
+    country,
+    description,
+    isLoaded,
+    lat,
+    lng,
+    name,
+    price,
+    state,
+  ]);
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -113,6 +131,8 @@ const UpdateSpot = () => {
       history.push(`/spots/${spot.id}`);
     }
   };
+
+  if (!isLoaded) return null
 
   return (
     <div className="create-spot">
