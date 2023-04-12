@@ -24,6 +24,10 @@ const SpotDetails = () => {
       <div className="spot-details">
         {isLoaded && (
           <>
+            <div>
+              <h1>{spot.name}</h1>
+              <p>{spot.city}, {spot.state}, {spot.country}</p>
+            </div>
             <div className="spot-images">
               <img
                 className="preview-img"
