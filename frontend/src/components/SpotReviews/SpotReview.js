@@ -1,7 +1,7 @@
 const SpotReview = ({ review }) => {
   return (
     <>
-      <h2>Review #{review.id}</h2>
+      <h3>Review #{review.id}</h3>
     </>
   );
 };

@@ -73,12 +73,15 @@ const SpotDetails = () => {
                 </p>
 
                 <p>
-                  <i className="fa-solid fa-star" style={{ color: "#000" }} />
+                  <i
+                    className="fa-solid fa-star"
+                    style={{ color: "#808080" }}
+                  />
                   {spot.avgStarRating
-                    ? Number(spot.avgStarRating).toFixed(1)
-                    : "New"}{" "}
-                  &#x2022; {spot.numReviews} review
-                  {spot.numReviews !== 1 && "s"}
+                    ? `${Number(spot.avgStarRating).toFixed(1)} • ${
+                        spot.numReviews
+                      } review${spot.numReviews !== 1 ? "s" : ""}`
+                    : "New"}
                 </p>
 
                 <button onClick={() => alert("Feature not yet implemented")}>
@@ -88,7 +91,7 @@ const SpotDetails = () => {
             </div>
 
             <div className="reviews">
-              <SpotReviews />
+              <SpotReviews spot={spot} />
             </div>
           </>
         )}
