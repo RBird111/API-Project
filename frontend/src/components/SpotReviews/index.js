@@ -35,7 +35,7 @@ const SpotReviews = ({ spot }) => {
           <>
             <button className="post-review">Post Your Review</button>
             {Object.values(reviews).length === 0 && (
-              <h3>Be the first to post a review!</h3>
+              <h3 style={{marginTop: "0"}}>Be the first to post a review!</h3>
             )}
           </>
         )}

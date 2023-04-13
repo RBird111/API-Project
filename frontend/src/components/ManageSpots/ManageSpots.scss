@@ -10,6 +10,10 @@
     button {
       margin: 5px 0;
     }
+
+    button {
+      background-color: #a9a9a9;
+    }
   }
 
   .spot-card {
@@ -24,5 +28,43 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
+    button {
+      background-color: #a9a9a9;
+    }
+  }
+}
+
+.confirm-delete {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 380px;
+
+  h2 {
+    margin: 15px 0;
+  }
+
+  p {
+    margin: 10px 10px;
+  }
+
+  button {
+    margin: 0;
+
+    height: 50px;
+    width: 95%;
+  }
+
+  .yes {
+    margin-top: 10px;
+  }
+
+  .no {
+    margin-top: 10px;
+    margin-bottom: 20px;
+
+    background-color: #a9a9a9;
   }
 }

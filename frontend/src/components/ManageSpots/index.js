@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
 import "./ManageSpots.scss";
-import { deleteSpot, getUserSpots } from "../../store/spot";
+import { getUserSpots } from "../../store/spot";
 import SpotCard from "../SpotCard";
+import { useModal } from "../../context/Modal";
+import ConfirmDelete from "./ConfirmDelete";
 
 const ManageSpots = () => {
   const dispatch = useDispatch();
+  const { setModalContent } = useModal();
+
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -39,10 +43,9 @@ const ManageSpots = () => {
               </NavLink>
 
               <button
-                onClick={async () => {
-                  await dispatch(deleteSpot(spot.id));
-                  await dispatch(getUserSpots());
-                }}
+                onClick={() =>
+                  setModalContent(<ConfirmDelete spotId={spot.id} />)
+                }
               >
                 Delete
               </button>

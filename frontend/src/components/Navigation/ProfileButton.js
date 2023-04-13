@@ -70,10 +70,6 @@ function ProfileButton({ user }) {
           <>
             <p>Hello, {user.username}</p>
 
-            {/* <p>
-              {user.firstName} {user.lastName}
-            </p> */}
-
             <p>{user.email}</p>
 
             <NavLink to={"/spots/current"}>
