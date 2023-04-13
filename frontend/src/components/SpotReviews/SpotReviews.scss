@@ -14,3 +14,17 @@
     margin: 10px 0;
   }
 }
+
+.review-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+}

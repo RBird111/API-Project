@@ -31,6 +31,7 @@ const SpotReviews = ({ spot }) => {
 
       <div>
         {user && allowButton(user, reviews) && Object.values(reviews) && (
+          // TODO ADD BUTTON FUNCTIONALITY
           <button className="post-review">Post Your Review</button>
         )}
       </div>
@@ -38,6 +39,10 @@ const SpotReviews = ({ spot }) => {
       {Object.values(reviews).map((review) => (
         <SpotReview key={review.id} review={review} />
       ))}
+
+      {Object.values(reviews).length === 0 && (
+        <p>Be the first to post a review!</p>
+      )}
     </div>
   );
 };

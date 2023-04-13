@@ -1,37 +1,39 @@
 .spot-images {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-
   margin: 0 auto;
+  max-width: 1200px;
+  max-height: 480px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas:
+    "pre pre i i"
+    "pre pre i i";
 
   .preview-img {
-    padding: 5px;
-
-    width: 800px;
-    height: 600px;
-
+    grid-area: pre;
+    width: 600px;
+    height: 480px;
     object-fit: cover;
   }
 
   .img-container {
+    grid-area: i;
+
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
       "i1 i2"
-      "i3 .";
+      "i3 i4";
 
-    max-width: 800px;
-    max-height: 600px;
-
-    padding: 5px;
+    width: 600px;
+    height: 480px;
 
     img {
-      max-width: 380px;
-      max-height: 280px;
+      width: 290px;
+      height: 230px;
+      object-fit: cover;
 
-      //   padding: 1.25px;
-      padding: 10px;
+      padding: 5px;
     }
 
     .i1 {
@@ -44,6 +46,10 @@
 
     .i3 {
       grid-area: i3;
+    }
+
+    .i4 {
+      grid-area: i4;
     }
   }
 }

@@ -46,15 +46,16 @@ const SpotDetails = () => {
               />
 
               <div className="img-container">
-                {/* TODO replace placeholders */}
-                {[1, 2, 3].map((num) => (
-                  <img
-                    key={num}
-                    className={`i${num}`}
-                    src={`https://picsum.photos/4${num}0/3${num}0`}
-                    alt="placeholder"
-                  />
-                ))}
+                {Object.values(spot.SpotImages)
+                  .filter((img) => img.preview === false)
+                  .map((image, idx) => (
+                    <img
+                      key={image.id}
+                      alt="spot"
+                      className={`i${idx}`}
+                      src={image.url}
+                    />
+                  ))}
               </div>
             </div>
 
