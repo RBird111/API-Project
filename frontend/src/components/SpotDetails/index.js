@@ -46,15 +46,16 @@ const SpotDetails = () => {
               />
 
               <div className="img-container">
-                {/* TODO replace placeholders */}
-                {[1, 2, 3].map((num) => (
-                  <img
-                    key={num}
-                    className={`i${num}`}
-                    src={`https://picsum.photos/4${num}0/3${num}0`}
-                    alt="placeholder"
-                  />
-                ))}
+                {Object.values(spot.SpotImages)
+                  .filter((img) => img.preview === false)
+                  .map((image, idx) => (
+                    <img
+                      key={image.id}
+                      alt="spot"
+                      className={`i${idx}`}
+                      src={image.url}
+                    />
+                  ))}
               </div>
             </div>
 
@@ -73,12 +74,15 @@ const SpotDetails = () => {
                 </p>
 
                 <p>
-                  <i className="fa-solid fa-star" style={{ color: "#000" }} />
+                  <i
+                    className="fa-solid fa-star"
+                    style={{ color: "#808080" }}
+                  />
                   {spot.avgStarRating
-                    ? Number(spot.avgStarRating).toFixed(1)
-                    : "New"}{" "}
-                  &#x2022; {spot.numReviews} review
-                  {spot.numReviews !== 1 && "s"}
+                    ? `${Number(spot.avgStarRating).toFixed(1)} • ${
+                        spot.numReviews
+                      } review${spot.numReviews !== 1 ? "s" : ""}`
+                    : "New"}
                 </p>
 
                 <button onClick={() => alert("Feature not yet implemented")}>
@@ -88,7 +92,7 @@ const SpotDetails = () => {
             </div>
 
             <div className="reviews">
-              <SpotReviews />
+              <SpotReviews spot={spot} />
             </div>
           </>
         )}
