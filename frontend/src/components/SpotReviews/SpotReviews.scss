@@ -28,3 +28,37 @@
     margin: 0;
   }
 }
+
+.post-review-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 380px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    width: 93%;
+
+    textarea {
+      background-color: #e4e6ff;
+      height: 100px;
+    }
+
+    .star-rating {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 20px;
+
+      span {
+        font-size: small;
+
+        margin-left: 5px;
+      }
+    }
+  }
+}

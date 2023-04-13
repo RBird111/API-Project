@@ -2,10 +2,14 @@ import { useSelector } from "react-redux";
 
 import "./SpotReviews.scss";
 import SpotReview from "./SpotReview";
+import { useModal } from "../../context/Modal";
+import ReviewModal from "./ReviewModal";
 
 const SpotReviews = ({ spot }) => {
   const reviews = useSelector((state) => state.reviews.spotReviews);
   const user = useSelector((state) => state.session.user);
+
+  const { setModalContent, closeModal } = useModal();
 
   const allowButton = (user, reviews) => {
     const hasReview = Object.values(reviews).find(
@@ -33,9 +37,18 @@ const SpotReviews = ({ spot }) => {
         {user && allowButton(user, reviews) && Object.values(reviews) && (
           // TODO ADD BUTTON FUNCTIONALITY
           <>
-            <button className="post-review">Post Your Review</button>
+            <button
+              className="post-review"
+              onClick={() =>
+                setModalContent(
+                  <ReviewModal close={closeModal} spotId={spot.id} />
+                )
+              }
+            >
+              Post Your Review
+            </button>
             {Object.values(reviews).length === 0 && (
-              <h3 style={{marginTop: "0"}}>Be the first to post a review!</h3>
+              <h3 style={{ marginTop: "0" }}>Be the first to post a review!</h3>
             )}
           </>
         )}
