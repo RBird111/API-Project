@@ -32,17 +32,18 @@ const SpotReviews = ({ spot }) => {
       <div>
         {user && allowButton(user, reviews) && Object.values(reviews) && (
           // TODO ADD BUTTON FUNCTIONALITY
-          <button className="post-review">Post Your Review</button>
+          <>
+            <button className="post-review">Post Your Review</button>
+            {Object.values(reviews).length === 0 && (
+              <h3>Be the first to post a review!</h3>
+            )}
+          </>
         )}
       </div>
 
       {Object.values(reviews).map((review) => (
         <SpotReview key={review.id} review={review} />
       ))}
-
-      {Object.values(reviews).length === 0 && (
-        <p>Be the first to post a review!</p>
-      )}
     </div>
   );
 };
