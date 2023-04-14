@@ -56,6 +56,7 @@ function LoginFormModal() {
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
+            autoFocus={true}
             required
           />
         </label>

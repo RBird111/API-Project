@@ -78,6 +78,7 @@ function SignupFormModal() {
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoFocus={true}
             required
           />
         </label>
