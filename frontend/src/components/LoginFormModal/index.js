@@ -49,6 +49,11 @@ function LoginFormModal() {
     <div className="login">
       <h1>Log In</h1>
 
+      {errors &&
+        Object.values(errors).map((error) => (
+          <p className="error">{error}</p>
+        ))}
+
       <form onSubmit={handleSubmit}>
         <label>
           Username or Email
@@ -56,6 +61,7 @@ function LoginFormModal() {
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
+            autoFocus={true}
             required
           />
         </label>
@@ -70,14 +76,12 @@ function LoginFormModal() {
           />
         </label>
 
-        {errors.credential && <p className="errors">{errors.credential}</p>}
-
         <button type="submit" disabled={disabled}>
           Log In
         </button>
       </form>
 
-      <button onClick={loginDemo}>Demo User</button>
+      <button className="demo-user" onClick={loginDemo}>Demo User</button>
     </div>
   );
 }

@@ -53,12 +53,14 @@ const SpotDetails = () => {
                 {Object.values(spot.SpotImages)
                   .filter((img) => img.preview === false)
                   .map((image, idx) => (
-                    <img
-                      key={image.id}
-                      alt="spot"
-                      className={`i${idx}`}
-                      src={image.url}
-                    />
+                    <div key={image.id}>
+                      <img
+                        key={image.id}
+                        alt="spot"
+                        className={`i${idx}`}
+                        src={image.url}
+                      />
+                    </div>
                   ))}
               </div>
             </div>

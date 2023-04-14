@@ -9,20 +9,29 @@ const ReviewModal = ({ spotId }) => {
   const { closeModal } = useModal();
 
   const [input, setInput] = useState("");
+
+  // Rating that gets reported
   const [rating, setRating] = useState(0);
+
+  // Rating that the slider uses
   const [activeRating, setActiveRating] = useState(rating);
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!rating)
+      setErrors({ rating: "Please provide a rating for your review." });
+    else setErrors({});
 
     const review = {
       review: input,
       stars: rating,
     };
 
-    const ret = await dispatch(createReview(spotId, review));
+    const res = await dispatch(createReview(spotId, review));
 
-    if (!ret.errors) {
+    if (!res.errors) {
       // console.log(ret.id);
       await dispatch(getSpotDetails(spotId));
       await dispatch(getSpotReviews(spotId));
@@ -56,6 +65,7 @@ const ReviewModal = ({ spotId }) => {
         <textarea
           placeholder="Leave your review here..."
           value={input}
+          autoFocus={true}
           onChange={(e) => setInput(e.target.value)}
           onMouseEnter={() => setActiveRating(rating)}
         />
@@ -69,6 +79,8 @@ const ReviewModal = ({ spotId }) => {
           ))}
           <span>Stars</span>
         </div>
+
+        <div>{errors?.rating && <p className="error">{errors.rating}</p>}</div>
 
         <button
           className="submit-button"

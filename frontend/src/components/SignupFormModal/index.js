@@ -71,6 +71,9 @@ function SignupFormModal() {
     <div className="signup">
       <h1>Sign Up</h1>
 
+      {errors &&
+        Object.values(errors).map((error) => <p className="error">{error}</p>)}
+
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -78,11 +81,10 @@ function SignupFormModal() {
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoFocus={true}
             required
           />
         </label>
-
-        {errors.email && <p>{errors.email}</p>}
 
         <label>
           Username
@@ -94,8 +96,6 @@ function SignupFormModal() {
           />
         </label>
 
-        {errors.username && <p>{errors.username}</p>}
-
         <label>
           First Name
           <input
@@ -105,8 +105,6 @@ function SignupFormModal() {
             required
           />
         </label>
-
-        {errors.firstName && <p>{errors.firstName}</p>}
 
         <label>
           Last Name
@@ -118,8 +116,6 @@ function SignupFormModal() {
           />
         </label>
 
-        {errors.lastName && <p>{errors.lastName}</p>}
-
         <label>
           Password
           <input
@@ -130,8 +126,6 @@ function SignupFormModal() {
           />
         </label>
 
-        {errors.password && <p>{errors.password}</p>}
-
         <label>
           Confirm Password
           <input
@@ -141,8 +135,6 @@ function SignupFormModal() {
             required
           />
         </label>
-
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
 
         <button type="submit" disabled={disabled}>
           Sign Up

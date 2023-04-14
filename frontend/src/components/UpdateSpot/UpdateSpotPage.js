@@ -11,7 +11,6 @@ const UpdateSpotPage = ({ currSpot }) => {
   const history = useHistory();
 
   const spotId = currSpot.id;
-  // const spotImages = Object.values(currSpot.SpotImages);
 
   const [country, setCountry] = useState(currSpot.country);
   const [address, setAdress] = useState(currSpot.address);
@@ -22,13 +21,6 @@ const UpdateSpotPage = ({ currSpot }) => {
   const [description, setDescription] = useState(currSpot.description);
   const [name, setName] = useState(currSpot.name);
   const [price, setPrice] = useState(currSpot.price);
-
-  // Spot images not implemented for update
-  // const [img1, setImg1] = useState(spotImages[0] ? spotImages[0].url : "");
-  // const [img2, setImg2] = useState(spotImages[1] ? spotImages[1].url : "");
-  // const [img3, setImg3] = useState(spotImages[2] ? spotImages[2].url : "");
-  // const [img4, setImg4] = useState(spotImages[3] ? spotImages[3].url : "");
-  // const [img5, setImg5] = useState(spotImages[4] ? spotImages[4].url : "");
 
   // Holds errors until submit
   const [validations, setValidations] = useState({});
@@ -63,32 +55,20 @@ const UpdateSpotPage = ({ currSpot }) => {
 
   // Handle validation
   useEffect(() => {
-    setValidations({});
-
     const errorObj = {};
 
-    if (country && !country.length) errorObj.country = "Country is required";
-    if (address && !address.length) errorObj.address = "Address is required";
-    if (city && !city.length) errorObj.city = "City is required";
-    if (state && !state.length) errorObj.state = "State is required";
+    if (!country?.length) errorObj.country = "Country is required";
+    if (!address?.length) errorObj.address = "Address is required";
+    if (!city?.length) errorObj.city = "City is required";
+    if (!state?.length) errorObj.state = "State is required";
     if (!lat) errorObj.lat = "Latitude is required";
     if (!lng) errorObj.lng = "Longitude is required";
-    if (description && description.length < 30)
+    if (description?.length < 30)
       errorObj.description = "Description needs a minimum of 30 characters";
-    if (name && !name.length) errorObj.name = "Name is required";
+    if (!name?.length) errorObj.name = "Name is required";
     if (!price) errorObj.price = "Price is required";
 
-    //Image errors
-    // const images = [img1, img2, img3, img4, img5];
-    // for (let i = 0; i < images.length; i++) {
-    //   if (images[i].length > 0 && !images[i].match(/(.png|.jpg|.jpeg)$/g))
-    //     errorObj[`img${i + 1}`] = "Image URL must end in .png, .jpg, or .jpeg";
-
-    //   if (i === 0 && !images[i].length)
-    //     errorObj.img1 = "Preview image is required";
-    // }
-
-    setValidations({ ...errorObj });
+    setValidations(errorObj);
   }, [address, city, country, description, lat, lng, name, price, state]);
 
   // Handle form submit
@@ -96,16 +76,10 @@ const UpdateSpotPage = ({ currSpot }) => {
     e.preventDefault();
 
     // Set errors
-    setErrors({ ...validations });
+    setErrors(validations);
 
     // If there are errors alert user and return
-    if (Object.values(validations).length > 0) {
-      // alert(
-      //   "There are some errors in your submission. Please correct them before resubmitting."
-      // );
-
-      return;
-    }
+    if (Object.values(validations).length > 0) return;
 
     const spotDetails = {
       country,
@@ -149,10 +123,7 @@ const UpdateSpotPage = ({ currSpot }) => {
                 <p>
                   Country
                   {errors.country && (
-                    <span className="error">
-                      {errors.country}
-                      {console.log(errors.country)}
-                    </span>
+                    <span className="error">{errors.country}</span>
                   )}
                 </p>
               </div>
@@ -197,8 +168,6 @@ const UpdateSpotPage = ({ currSpot }) => {
             </label>
           </div>
 
-          {/* <p>,</p> */}
-
           <div className="state">
             <label htmlFor="state">
               <p>
@@ -224,8 +193,6 @@ const UpdateSpotPage = ({ currSpot }) => {
               <input type="text" name="lat" value={lat} onChange={(e) => {}} />
             </label>
           </div>
-
-          {/* <p>,</p> */}
 
           <div className="lng">
             <label htmlFor="lng">
@@ -292,52 +259,6 @@ const UpdateSpotPage = ({ currSpot }) => {
           />
           {errors.price && <span className="error">{errors.price}</span>}
         </div>
-
-        {/* <div className="part5">
-          <h3>Liven up your spot with photos</h3>
-
-          <p>Submit a link to at least one photo to publish your spot.</p>
-
-          <input
-            placeholder="Preview Image URL"
-            type="text"
-            value={img1}
-            onChange={(e) => setImg1(e.target.value)}
-          />
-          {errors.img1 && <span className="error">{errors.img1}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img2}
-            onChange={(e) => setImg2(e.target.value)}
-          />
-          {errors.img2 && <span className="error">{errors.img2}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img3}
-            onChange={(e) => setImg3(e.target.value)}
-          />
-          {errors.img3 && <span className="error">{errors.img3}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img4}
-            onChange={(e) => setImg4(e.target.value)}
-          />
-          {errors.img4 && <span className="error">{errors.img4}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img5}
-            onChange={(e) => setImg5(e.target.value)}
-          />
-          {errors.img5 && <span className="error">{errors.img5}</span>}
-        </div> */}
 
         <button type="submit">Update Spot</button>
       </form>
