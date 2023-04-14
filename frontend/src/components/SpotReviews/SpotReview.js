@@ -17,13 +17,15 @@ const SpotReview = ({ review }) => {
 
   return (
     <div className="review-body">
-      <h3 style={{marginTop: "5px"}}>{review.User.firstName}</h3>
+      <h3 style={{ marginTop: "5px" }}>{review.User.firstName}</h3>
 
       <p className="date">
         {months[Number(month)]} {year}
       </p>
 
-      <p style={{fontSize: "small", marginBottom: "10px"}}>"{review.review}"</p>
+      <p style={{ fontSize: "small", marginBottom: "10px" }}>
+        "{review.review}"
+      </p>
     </div>
   );
 };
