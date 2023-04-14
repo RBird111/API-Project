@@ -14,6 +14,7 @@ div.signup {
   }
 
   form {
+    width: 90%;
     display: flex;
     flex-direction: column;
 
@@ -31,5 +32,13 @@ div.signup {
 
   p {
     color: #ff5a5f;
+  }
+
+  button {
+    margin: 0 auto;
+    margin-bottom: 20px;
+
+    height: 50px;
+    width: 100%;
   }
 }
