@@ -65,6 +65,7 @@ const ReviewModal = ({ spotId }) => {
         <textarea
           placeholder="Leave your review here..."
           value={input}
+          autoFocus={true}
           onChange={(e) => setInput(e.target.value)}
           onMouseEnter={() => setActiveRating(rating)}
         />

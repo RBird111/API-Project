@@ -59,8 +59,6 @@ const CreateSpot = () => {
 
   // Handle validation
   useEffect(() => {
-    setValidations({});
-
     const errorObj = {};
 
     if (!country.length) errorObj.country = "Country is required";
@@ -84,7 +82,7 @@ const CreateSpot = () => {
         errorObj.img1 = "Preview image is required";
     }
 
-    setValidations({ ...errorObj });
+    setValidations(errorObj);
   }, [
     address,
     city,
@@ -107,13 +105,11 @@ const CreateSpot = () => {
     e.preventDefault();
 
     // Set errors
-    setErrors({ ...validations });
+    setErrors(validations);
 
     // If there are errors alert user and return
     if (Object.values(validations).length > 0) {
-      // alert(
-      //   "There are some errors in your submission. Please correct them before resubmitting."
-      // );
+      // console.log("Stopping submit")
 
       return;
     }
@@ -215,8 +211,6 @@ const CreateSpot = () => {
             </label>
           </div>
 
-          {/* <p>,</p> */}
-
           <div className="state">
             <label htmlFor="state">
               <p>
@@ -242,8 +236,6 @@ const CreateSpot = () => {
               <input type="text" name="lat" value={lat} onChange={(e) => {}} />
             </label>
           </div>
-
-          {/* <p>,</p> */}
 
           <div className="lng">
             <label htmlFor="lng">

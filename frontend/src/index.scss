@@ -39,3 +39,7 @@ button:hover {
 button[disabled]:hover {
   box-shadow: none;
 }
+
+textarea {
+  resize: none;
+}
