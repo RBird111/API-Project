@@ -22,6 +22,10 @@ const SpotDetails = () => {
   }, [dispatch, spotId]);
 
   const spot = useSelector((state) => state.spots.spotDetails);
+  const [propSpot, setPropSpot] = useState({});
+  useEffect(() => {
+    setPropSpot(spot);
+  }, [spot]);
 
   return (
     <>
@@ -92,7 +96,7 @@ const SpotDetails = () => {
             </div>
 
             <div className="reviews">
-              <SpotReviews spot={spot} />
+              <SpotReviews spot={propSpot} />
             </div>
           </>
         )}

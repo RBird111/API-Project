@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
-import { deleteSpot, getUserSpots } from "../../store/spot";
+import { deleteSpot, getSpotDetails, getUserSpots } from "../../store/spot";
 import { useModal } from "../../context/Modal";
+import { deleteReview } from "../../store/reviews";
 
-const ConfirmDelete = ({ spotId }) => {
+const ConfirmDelete = ({ type, reviewId, spotId }) => {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
@@ -10,21 +11,33 @@ const ConfirmDelete = ({ spotId }) => {
     <div className="confirm-delete">
       <h2>Confirm Delete</h2>
 
-      <p>Are you sure you want to remove this spot from the listings?</p>
+      {type === "Spot" ? (
+        <p>Are you sure you want to remove this spot from the listings?</p>
+      ) : type === "Review" ? (
+        <p>Are you sure you want to delete this review?</p>
+      ) : null}
 
       <button
         className="yes"
         onClick={async () => {
-          await dispatch(deleteSpot(spotId));
-          await dispatch(getUserSpots());
+          if (type === "Spot") {
+            await dispatch(deleteSpot(spotId));
+            await dispatch(getUserSpots());
+          }
+
+          if (type === "Review") {
+            await dispatch(deleteReview(reviewId));
+            await dispatch(getSpotDetails(spotId));
+          }
+
           closeModal();
         }}
       >
-        Yes (Delete Spot)
+        Yes (Delete {type})
       </button>
 
       <button className="no" onClick={closeModal}>
-        No (Keep Spot)
+        No (Keep {type})
       </button>
     </div>
   );

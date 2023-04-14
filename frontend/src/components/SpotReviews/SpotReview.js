@@ -1,4 +1,9 @@
-const SpotReview = ({ review }) => {
+import { useModal } from "../../context/Modal";
+import ConfirmDelete from "../ManageSpots/ConfirmDelete";
+
+const SpotReview = ({ id, review }) => {
+  const { setModalContent } = useModal();
+
   const [year, month] = review.createdAt.split("-");
   const months = {
     1: "January",
@@ -26,6 +31,24 @@ const SpotReview = ({ review }) => {
       <p style={{ fontSize: "small", marginBottom: "10px" }}>
         "{review.review}"
       </p>
+
+      <div>
+        {id === review.userId && (
+          <button
+            onClick={() =>
+              setModalContent(
+                <ConfirmDelete
+                  type={"Review"}
+                  reviewId={review.id}
+                  spotId={review.spotId}
+                />
+              )
+            }
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 };
