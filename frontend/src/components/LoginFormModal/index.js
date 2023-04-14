@@ -70,7 +70,7 @@ function LoginFormModal() {
           />
         </label>
 
-        {errors.credential && <p>{errors.credential}</p>}
+        {errors.credential && <p className="errors">{errors.credential}</p>}
 
         <button type="submit" disabled={disabled}>
           Log In
