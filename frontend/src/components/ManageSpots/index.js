@@ -44,7 +44,7 @@ const ManageSpots = () => {
 
               <button
                 onClick={() =>
-                  setModalContent(<ConfirmDelete spotId={spot.id} />)
+                  setModalContent(<ConfirmDelete type={"Spot"} spotId={spot.id} />)
                 }
               >
                 Delete

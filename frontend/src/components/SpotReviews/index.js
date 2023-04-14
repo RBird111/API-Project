@@ -9,7 +9,7 @@ const SpotReviews = ({ spot }) => {
   const reviews = useSelector((state) => state.reviews.spotReviews);
   const user = useSelector((state) => state.session.user);
 
-  const { setModalContent, closeModal } = useModal();
+  const { setModalContent } = useModal();
 
   const allowButton = (user, reviews) => {
     const hasReview = Object.values(reviews).find(
@@ -39,11 +39,7 @@ const SpotReviews = ({ spot }) => {
           <>
             <button
               className="post-review"
-              onClick={() =>
-                setModalContent(
-                  <ReviewModal close={closeModal} spotId={spot.id} />
-                )
-              }
+              onClick={() => setModalContent(<ReviewModal spotId={spot.id} />)}
             >
               Post Your Review
             </button>
@@ -55,7 +51,7 @@ const SpotReviews = ({ spot }) => {
       </div>
 
       {Object.values(reviews).map((review) => (
-        <SpotReview key={review.id} review={review} />
+        <SpotReview id={user.id} key={review.id} review={review} />
       ))}
     </div>
   );

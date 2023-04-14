@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createReview, getSpotReviews } from "../../store/reviews";
+import { useModal } from "../../context/Modal";
 
-const ReviewModal = ({ close, spotId }) => {
+const ReviewModal = ({ spotId }) => {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
   const [input, setInput] = useState("");
   const [rating, setRating] = useState(0);
@@ -20,9 +22,9 @@ const ReviewModal = ({ close, spotId }) => {
     const ret = await dispatch(createReview(spotId, review));
 
     if (!ret.errors) {
-      console.log(ret);
-      await dispatch(getSpotReviews(spotId));
-      close();
+      // console.log(ret.id);
+      dispatch(getSpotReviews(spotId));
+      closeModal();
     }
   };
 
