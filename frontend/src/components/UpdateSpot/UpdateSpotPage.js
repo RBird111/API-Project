@@ -79,11 +79,7 @@ const UpdateSpotPage = ({ currSpot }) => {
     setErrors(validations);
 
     // If there are errors alert user and return
-    if (Object.values(validations).length > 0) {
-      console.log("Stopping submit");
-
-      return;
-    }
+    if (Object.values(validations).length > 0) return;
 
     const spotDetails = {
       country,

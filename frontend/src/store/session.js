@@ -39,7 +39,8 @@ export const login =
       return user;
     }
 
-    return response;
+    const errors = await response.json();
+    return errors;
   };
 
 // Log out action
@@ -55,7 +56,8 @@ export const logout = () => async (dispatch) => {
     return message;
   }
 
-  return response;
+  const errors = await response.json();
+  return errors;
 };
 
 // Restore user action
@@ -69,7 +71,8 @@ export const restoreUser = () => async (dispatch) => {
     return user;
   }
 
-  return response;
+  const errors = await response.json();
+  return errors;
 };
 
 // Create new user action

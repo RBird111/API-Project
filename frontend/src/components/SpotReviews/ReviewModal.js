@@ -80,7 +80,7 @@ const ReviewModal = ({ spotId }) => {
           <span>Stars</span>
         </div>
 
-        <div>{errors?.rating && <p className="errors">{errors.rating}</p>}</div>
+        <div>{errors?.rating && <p className="error">{errors.rating}</p>}</div>
 
         <button
           className="submit-button"

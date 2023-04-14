@@ -49,6 +49,11 @@ function LoginFormModal() {
     <div className="login">
       <h1>Log In</h1>
 
+      {errors &&
+        Object.values(errors).map((error) => (
+          <p className="error">{error}</p>
+        ))}
+
       <form onSubmit={handleSubmit}>
         <label>
           Username or Email
@@ -70,8 +75,6 @@ function LoginFormModal() {
             required
           />
         </label>
-
-        {errors.credential && <p className="errors">{errors.credential}</p>}
 
         <button type="submit" disabled={disabled}>
           Log In
