@@ -5,6 +5,7 @@ const USER_REVIEWS = "reviews/USER";
 const SPOT_REVIEWS = "reviews/SPOT";
 const CREATE_REVIEW = "reviews/CREATE";
 const DELETE_REVIEW = "reviews/DELETE";
+const EDIT_REVIEW = "reviews/EDIT";
 
 // ---ACTIONS--- \\
 const _getUserReviews = (reviews) => {
@@ -35,8 +36,14 @@ const _deleteReview = (reviewId) => {
   };
 };
 
-// ---ACTION DISPATCHERS--- \\
+const _editReview = (review) => {
+  return {
+    type: EDIT_REVIEW,
+    review,
+  };
+};
 
+// ---ACTION DISPATCHERS--- \\
 export const getUserReviews = () => async (dispatch) => {
   const response = await csrfFetch("/api/reviews/current");
 
@@ -119,8 +126,26 @@ export const deleteReview = (reviewId) => async (dispatch) => {
   return errors;
 };
 
+export const editReview = (review) => async (dispatch) => {
+  const response = await csrfFetch(`/api/reviews/${review.id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(review),
+  });
+
+  if (response.ok) {
+    const review = await response.json();
+    dispatch(_editReview(review));
+
+    return review;
+  }
+
+  const errors = await response.json();
+  return errors;
+};
+
 // ---REDUCER--- \\
-const initialState = { userReviews: {}, spotReviews: {}, currReview: {} };
+const initialState = { userReviews: {}, spotReviews: {} };
 
 const reviewReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -143,6 +168,16 @@ const reviewReducer = (state = initialState, action) => {
       if (userReviews[action.reviewId]) delete userReviews[action.reviewId];
 
       return { ...state, spotReviews, userReviews };
+    }
+
+    case EDIT_REVIEW: {
+      return {
+        ...state,
+        userReviews: {
+          ...state.userReviews,
+          [action.review.id]: action.review,
+        },
+      };
     }
 
     default: {

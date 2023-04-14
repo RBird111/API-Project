@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createReview, getSpotReviews } from "../../store/reviews";
+import { useDispatch, useSelector } from "react-redux";
+import { createReview, editReview, getSpotReviews } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
 import { getSpotDetails } from "../../store/spot";
 
-const ReviewModal = ({ spotId }) => {
+const ReviewModal = ({ spotId, review }) => {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
+  const spot = useSelector((state) => state.spots.spotList)[spotId];
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(review ? review.review : "");
 
   // Rating that gets reported
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(review ? review.stars : 0);
 
   // Rating that the slider uses
   const [activeRating, setActiveRating] = useState(rating);
@@ -24,18 +25,28 @@ const ReviewModal = ({ spotId }) => {
       setErrors({ rating: "Please provide a rating for your review." });
     else setErrors({});
 
-    const review = {
+    const newReview = {
       review: input,
       stars: rating,
     };
 
-    const res = await dispatch(createReview(spotId, review));
+    if (!review) {
+      const res = await dispatch(createReview(spotId, newReview));
 
-    if (!res.errors) {
-      // console.log(ret.id);
-      await dispatch(getSpotDetails(spotId));
-      await dispatch(getSpotReviews(spotId));
-      closeModal();
+      if (!res.errors) {
+        await dispatch(getSpotDetails(spotId));
+        await dispatch(getSpotReviews(spotId));
+        closeModal();
+      }
+    } else {
+      newReview.id = review.id;
+      const res = await dispatch(editReview(newReview));
+
+      if (!res.errors) {
+        await dispatch(getSpotDetails(spotId));
+        await dispatch(getSpotReviews(spotId));
+        closeModal();
+      }
     }
   };
 
@@ -60,7 +71,7 @@ const ReviewModal = ({ spotId }) => {
 
   return (
     <div className="post-review-div">
-      <h2>How was your stay?</h2>
+      <h2>How was your stay{review && ` at ${spot.name}`}?</h2>
       <form onSubmit={handleSubmit}>
         <textarea
           placeholder="Leave your review here..."
@@ -87,7 +98,7 @@ const ReviewModal = ({ spotId }) => {
           disabled={input.length < 10}
           onMouseEnter={() => setActiveRating(rating)}
         >
-          Submit Your Review
+          {review ? "Update" : "Submit"} Your Review
         </button>
       </form>
     </div>

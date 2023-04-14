@@ -22,6 +22,7 @@ const SpotDetails = () => {
   }, [dispatch, spotId]);
 
   const spot = useSelector((state) => state.spots.spotDetails);
+
   const [propSpot, setPropSpot] = useState({});
   useEffect(() => {
     setPropSpot(spot);

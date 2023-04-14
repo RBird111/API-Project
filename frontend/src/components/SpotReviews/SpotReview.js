@@ -1,5 +1,6 @@
 import { useModal } from "../../context/Modal";
 import ConfirmDelete from "../ManageSpots/ConfirmDelete";
+import ReviewModal from "./ReviewModal";
 
 const SpotReview = ({ id, review }) => {
   const { setModalContent } = useModal();
@@ -34,19 +35,35 @@ const SpotReview = ({ id, review }) => {
 
       <div>
         {id === review.userId && (
-          <button
-            onClick={() =>
-              setModalContent(
-                <ConfirmDelete
-                  type={"Review"}
-                  reviewId={review.id}
-                  spotId={review.spotId}
-                />
-              )
-            }
-          >
-            Delete
-          </button>
+          <>
+            <button
+              onClick={() =>
+                setModalContent(
+                  <ConfirmDelete
+                    type={"Review"}
+                    reviewId={review.id}
+                    spotId={review.spotId}
+                  />
+                )
+              }
+            >
+              Delete
+            </button>
+
+            <button
+              onClick={() =>
+                setModalContent(
+                  <ReviewModal
+                    type={"Review"}
+                    review={review}
+                    spotId={review.spotId}
+                  />
+                )
+              }
+            >
+              Update
+            </button>
+          </>
         )}
       </div>
     </div>

@@ -97,15 +97,14 @@
       }
     }
 
-    // div {
-    //   cursor: pointer;
+    button {
+      border-radius: 20px;
 
-    //   padding: 0 8px;
-    //   margin: 4px auto;
-
-    //   display: flex;
-    //   justify-content: center;
-    // }
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-bottom: 10px;
+      height: 30px;
+    }
 
     p:hover {
       background-color: lightgray;
