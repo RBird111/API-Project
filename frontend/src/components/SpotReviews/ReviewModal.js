@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createReview, getSpotReviews } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
+import { getSpotDetails } from "../../store/spot";
 
 const ReviewModal = ({ spotId }) => {
   const dispatch = useDispatch();
@@ -23,7 +24,8 @@ const ReviewModal = ({ spotId }) => {
 
     if (!ret.errors) {
       // console.log(ret.id);
-      dispatch(getSpotReviews(spotId));
+      await dispatch(getSpotDetails(spotId));
+      await dispatch(getSpotReviews(spotId));
       closeModal();
     }
   };
@@ -35,6 +37,7 @@ const ReviewModal = ({ spotId }) => {
     props.onClick = () => setRating(number);
 
     return (
+      // Star icons
       <div key={number} {...props}>
         <i
           className={`${
@@ -54,16 +57,24 @@ const ReviewModal = ({ spotId }) => {
           placeholder="Leave your review here..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onMouseEnter={() => setActiveRating(rating)}
         />
 
-        <div className="star-rating">
+        <div
+          className="star-rating"
+          onMouseLeave={() => setActiveRating(rating)}
+        >
           {[1, 2, 3, 4, 5].map((number) => (
             <StarIcon key={number} number={number} />
           ))}
           <span>Stars</span>
         </div>
 
-        <button className="submit-button" disabled={input.length < 10}>
+        <button
+          className="submit-button"
+          disabled={input.length < 10}
+          onMouseEnter={() => setActiveRating(rating)}
+        >
           Submit Your Review
         </button>
       </form>

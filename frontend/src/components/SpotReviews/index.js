@@ -51,7 +51,7 @@ const SpotReviews = ({ spot }) => {
       </div>
 
       {Object.values(reviews).map((review) => (
-        <SpotReview id={user.id} key={review.id} review={review} />
+        <SpotReview id={user?.id} key={review.id} review={review} />
       ))}
     </div>
   );
