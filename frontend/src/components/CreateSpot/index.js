@@ -38,9 +38,7 @@ const CreateSpot = () => {
     if (city && state) {
       window
         .fetch(
-          `https://api.api-ninjas.com/v1/geocoding?country=United+States&city=${city}&state=${
-            states[state]
-          }`,
+          `https://api.api-ninjas.com/v1/geocoding?country=United+States&city=${city}&state=${states[state]}`,
           {
             method: "GET",
 

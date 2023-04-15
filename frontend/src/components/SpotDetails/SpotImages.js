@@ -15,7 +15,7 @@ const SpotImages = ({ spot }) => {
         {Object.values(spot.SpotImages)
           .filter((img) => img.preview === false)
           .map((image, idx) => (
-            <div key={image.id}>
+            <div key={image.id} className={`div${idx}`}>
               <img
                 key={image.id}
                 alt="spot"
