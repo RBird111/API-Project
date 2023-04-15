@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { getSpotDetails } from "../../store/spot";
 import "./SpotDetails.scss";
 import SpotReviews from "../SpotReviews";
+import { getSpotDetails } from "../../store/spot";
 import { getSpotReviews } from "../../store/reviews";
+import SpotImages from "./SpotImages";
+import Booking from "./Booking";
 
 const SpotDetails = () => {
   const dispatch = useDispatch();
@@ -15,11 +17,11 @@ const SpotDetails = () => {
   const spot = useSelector((state) => state.spots.spotDetails);
 
   useEffect(() => {
-    dispatch(getSpotDetails(spotId))
-    dispatch(getSpotReviews(spotId))
+    dispatch(getSpotDetails(spotId));
+    dispatch(getSpotReviews(spotId));
   }, [dispatch, spotId]);
 
-  if (!spot) return null
+  if (Object.values(spot).length === 0) return null;
 
   return (
     <div className="spot-details">
@@ -31,33 +33,8 @@ const SpotDetails = () => {
           </p>
         </div>
 
-        {/* Seperate into component */}
-        <div className="spot-images">
-          <img
-            className="preview-img"
-            src={
-              Object.values(spot.SpotImages).find(
-                (img) => img.preview === true
-              )?.url
-            }
-            alt="spot"
-          />
-
-          <div className="img-container">
-            {Object.values(spot.SpotImages)
-              .filter((img) => img.preview === false)
-              .map((image, idx) => (
-                <div key={image.id}>
-                  <img
-                    key={image.id}
-                    alt="spot"
-                    className={`i${idx}`}
-                    src={image.url}
-                  />
-                </div>
-              ))}
-          </div>
-        </div>
+        {/* Display spot images */}
+        <SpotImages spot={spot} />
 
         <div className="spot-detail">
           <div className="description">
@@ -68,33 +45,15 @@ const SpotDetails = () => {
             <p>{spot.description}</p>
           </div>
 
-          <div className="booking">
-            <p>
-              <span>${Number(spot.price).toFixed(0)} </span> night
-            </p>
-
-            <p>
-              <i
-                className="fa-solid fa-star"
-                style={{ color: "#808080" }}
-              />
-              {spot.avgStarRating
-                ? `${Number(spot.avgStarRating).toFixed(1)} • ${spot.numReviews
-                } review${spot.numReviews !== 1 ? "s" : ""}`
-                : "New"}
-            </p>
-
-            <button onClick={() => alert("Feature not yet implemented")}>
-              Reserve
-            </button>
-          </div>
+          {/* Display booking feature */}
+          <Booking spot={spot} />
         </div>
 
         <div className="reviews">
+          {/* Display spot reviews */}
           <SpotReviews spot={spot} />
         </div>
       </>
-      )
     </div>
   );
 };
