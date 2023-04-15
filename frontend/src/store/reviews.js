@@ -47,6 +47,7 @@ const _editReview = (review) => {
 export const getUserReviews = () => async (dispatch) => {
   const response = await csrfFetch("/api/reviews/current");
 
+  // Place at end of code use gaurd for fail case and handle normalization in the reducer, not thunk
   if (response.ok) {
     const { Reviews } = await response.json();
 
@@ -164,6 +165,7 @@ const reviewReducer = (state = initialState, action) => {
     case DELETE_REVIEW: {
       const spotReviews = { ...state.spotReviews };
       if (spotReviews[action.reviewId]) delete spotReviews[action.reviewId];
+
       const userReviews = { ...state.userReviews };
       if (userReviews[action.reviewId]) delete userReviews[action.reviewId];
 

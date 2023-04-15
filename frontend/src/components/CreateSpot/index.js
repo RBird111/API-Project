@@ -33,15 +33,18 @@ const CreateSpot = () => {
   const [errors, setErrors] = useState({});
 
   // Auto fetch lat/lng from external api
+  // ---MOVE TO SUBMIT HANDLER--- \\
   useEffect(() => {
     if (city && state) {
       window
         .fetch(
-          `https://api.api-ninjas.com/v1/geocoding?country=${"United States"}&city=${city}&state=${
+          `https://api.api-ninjas.com/v1/geocoding?country=United+States&city=${city}&state=${
             states[state]
           }`,
           {
             method: "GET",
+
+            // Remove API key
             headers: {
               "X-Api-Key": "YevuDleL/mfTXr017w4XyQ==wD9VJscwuzX3m97G",
             },
@@ -213,7 +216,6 @@ const CreateSpot = () => {
                 State
                 {errors.state && <span className="error">{errors.state}</span>}
               </p>
-              <div></div>
               <input
                 type="text"
                 name="state"
