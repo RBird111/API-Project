@@ -51,9 +51,9 @@ const SpotReviews = ({ spot }) => {
 
       {Object.values(reviews).map((review) => (
         <SpotReview
-          key={review.id}
+          key={review?.id}
           type={"spot"}
-          userId={user.id}
+          userId={user?.id}
           review={review}
         />
       ))}
