@@ -2,7 +2,7 @@ import { useModal } from "../../context/Modal";
 import ConfirmDelete from "../ManageSpots/ConfirmDelete";
 import ReviewModal from "./ReviewModal";
 
-const SpotReview = ({ id, review }) => {
+const SpotReview = ({ userId, review, type }) => {
   const { setModalContent } = useModal();
 
   const [year, month] = review.createdAt.split("-");
@@ -23,7 +23,9 @@ const SpotReview = ({ id, review }) => {
 
   return (
     <div className="review-body">
-      <h3 style={{ marginTop: "5px" }}>{review.User.firstName}</h3>
+      <h3 style={{ marginTop: "5px" }}>
+        {type === "spot" ? review.User.firstName : review.Spot?.name}
+      </h3>
 
       <p className="date">
         {months[Number(month)]} {year}
@@ -34,22 +36,8 @@ const SpotReview = ({ id, review }) => {
       </p>
 
       <div>
-        {id === review.userId && (
-          <>
-            <button
-              onClick={() =>
-                setModalContent(
-                  <ConfirmDelete
-                    type={"Review"}
-                    reviewId={review.id}
-                    spotId={review.spotId}
-                  />
-                )
-              }
-            >
-              Delete
-            </button>
-
+        {userId === review.userId && (
+          <div style={{ marginBottom: "10px" }}>
             <button
               onClick={() =>
                 setModalContent(
@@ -63,7 +51,21 @@ const SpotReview = ({ id, review }) => {
             >
               Update
             </button>
-          </>
+
+            <button
+              onClick={() =>
+                setModalContent(
+                  <ConfirmDelete
+                    type={"Review"}
+                    reviewId={review.id}
+                    spotId={review.spotId}
+                  />
+                )
+              }
+            >
+              Delete
+            </button>
+          </div>
         )}
       </div>
     </div>

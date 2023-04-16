@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createReview, editReview, getSpotReviews } from "../../store/reviews";
+import {
+  createReview,
+  editReview,
+  getSpotReviews,
+  getUserReviews,
+} from "../../store/reviews";
 import { useModal } from "../../context/Modal";
 import { getSpotDetails } from "../../store/spot";
 
@@ -44,6 +49,7 @@ const ReviewModal = ({ spotId, review }) => {
 
       if (!res.errors) {
         await dispatch(getSpotDetails(spotId));
+        await dispatch(getUserReviews());
         await dispatch(getSpotReviews(spotId));
         closeModal();
       }

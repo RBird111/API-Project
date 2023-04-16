@@ -146,7 +146,7 @@ export const editReview = (review) => async (dispatch) => {
 };
 
 // ---REDUCER--- \\
-const initialState = { userReviews: {}, spotReviews: {} };
+const initialState = { userReviews: {}, spotReviews: {}, currReview: {} };
 
 const reviewReducer = (state = initialState, action) => {
   switch (action.type) {
