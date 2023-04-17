@@ -26,11 +26,6 @@ div.login {
       margin-bottom: 10px;
     }
 
-    .error {
-      margin-top: 0;
-      color: #ff5a5f;
-    }
-
     button {
       margin: 0 auto;
       margin-bottom: 10px;
@@ -44,4 +39,9 @@ div.login {
     margin: 10px auto;
     border-radius: 10px;
   }
+}
+
+.error {
+  margin-top: 0;
+  color: #ff5a5f;
 }
