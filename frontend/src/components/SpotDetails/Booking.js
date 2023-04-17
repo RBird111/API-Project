@@ -10,7 +10,7 @@ const Booking = ({ spot }) => {
         {spot.avgStarRating
           ? `${Number(spot.avgStarRating).toFixed(1)} • ${
               spot.numReviews
-            } review${spot.numReviews !== 1 ? "s" : ""}`
+            } review${Number(spot.numReviews) !== 1 ? "s" : ""}`
           : "New"}
       </p>
 
