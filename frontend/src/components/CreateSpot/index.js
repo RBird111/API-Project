@@ -44,7 +44,7 @@ const CreateSpot = () => {
 
             // Remove API key
             headers: {
-              "X-Api-Key": "YevuDleL/mfTXr017w4XyQ==wD9VJscwuzX3m97G",
+              "X-Api-Key": process.env.X_API_KEY,
             },
             "Content-Type": "application/json",
           }
