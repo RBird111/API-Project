@@ -11,7 +11,7 @@ const {
   Booking,
   sequelize,
 } = require("../../db/models");
-const states = require("../../utils/states");
+const { states } = require("../../utils/states");
 
 // Validation for query parameters
 const validateQueryParams = [

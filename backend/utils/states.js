@@ -61,4 +61,4 @@ const states = {
   Wyoming: "WY",
 };
 
-export default states;
+module.exports = { states };
