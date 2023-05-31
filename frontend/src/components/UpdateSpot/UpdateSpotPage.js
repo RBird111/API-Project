@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import "./UpdateSpot.scss";
-import states from "../CreateSpot/states";
 import { getAllSpots, updateSpot } from "../../store/spot";
 
 const UpdateSpotPage = ({ currSpot }) => {
@@ -16,8 +15,6 @@ const UpdateSpotPage = ({ currSpot }) => {
   const [address, setAdress] = useState(currSpot.address);
   const [city, setCity] = useState(currSpot.city);
   const [state, setState] = useState(currSpot.state);
-  const [lat, setLat] = useState(currSpot.lat);
-  const [lng, setLng] = useState(currSpot.lng);
   const [description, setDescription] = useState(currSpot.description);
   const [name, setName] = useState(currSpot.name);
   const [price, setPrice] = useState(currSpot.price);
@@ -28,31 +25,6 @@ const UpdateSpotPage = ({ currSpot }) => {
   // Holds errors after submit
   const [errors, setErrors] = useState({});
 
-  // Auto fetch lat/lng from external api
-  useEffect(() => {
-    if (city && state) {
-      window
-        .fetch(
-          `https://api.api-ninjas.com/v1/geocoding?country=${"United States"}&city=${city}&state=${
-            states[state]
-          }`,
-          {
-            method: "GET",
-            headers: {
-              "X-Api-Key": "YevuDleL/mfTXr017w4XyQ==wD9VJscwuzX3m97G",
-            },
-            "Content-Type": "application/json",
-          }
-        )
-        .then((res) => res.json())
-        .then((res) => {
-          const { latitude, longitude } = res[0];
-          setLat(latitude);
-          setLng(longitude);
-        });
-    }
-  }, [city, state]);
-
   // Handle validation
   useEffect(() => {
     const errorObj = {};
@@ -61,15 +33,13 @@ const UpdateSpotPage = ({ currSpot }) => {
     if (!address?.length) errorObj.address = "Address is required";
     if (!city?.length) errorObj.city = "City is required";
     if (!state?.length) errorObj.state = "State is required";
-    if (!lat) errorObj.lat = "Latitude is required";
-    if (!lng) errorObj.lng = "Longitude is required";
     if (description?.length < 30)
       errorObj.description = "Description needs a minimum of 30 characters";
     if (!name?.length) errorObj.name = "Name is required";
     if (!price) errorObj.price = "Price is required";
 
     setValidations(errorObj);
-  }, [address, city, country, description, lat, lng, name, price, state]);
+  }, [address, city, country, description, name, price, state]);
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -86,8 +56,6 @@ const UpdateSpotPage = ({ currSpot }) => {
       address,
       city,
       state,
-      lat,
-      lng,
       description,
       name,
       price,
@@ -181,26 +149,6 @@ const UpdateSpotPage = ({ currSpot }) => {
                 value={state}
                 onChange={(e) => setState(e.target.value)}
               />
-            </label>
-          </div>
-
-          <div className="lat">
-            <label htmlFor="lat">
-              <p>
-                Latitude
-                {errors.lat && <span className="error">{errors.lat}</span>}
-              </p>
-              <input type="text" name="lat" value={lat} onChange={(e) => {}} />
-            </label>
-          </div>
-
-          <div className="lng">
-            <label htmlFor="lng">
-              <p>
-                Longitude
-                {errors.lng && <span className="error">{errors.lng}</span>}
-              </p>
-              <input type="text" name="lng" value={lng} onChange={(e) => {}} />
             </label>
           </div>
         </div>

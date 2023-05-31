@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import "./CreateSpot.scss";
-import states from "./states";
 import { addImageToSpot, createSpot, getAllSpots } from "../../store/spot";
 
 const CreateSpot = () => {
@@ -14,8 +13,6 @@ const CreateSpot = () => {
   const [address, setAdress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [lat, setLat] = useState("");
-  const [lng, setLng] = useState("");
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -32,32 +29,6 @@ const CreateSpot = () => {
   // Holds errors after submit
   const [errors, setErrors] = useState({});
 
-  // Auto fetch lat/lng from external api
-  // ---MOVE TO SUBMIT HANDLER--- \\
-  useEffect(() => {
-    if (city && state) {
-      window
-        .fetch(
-          `https://api.api-ninjas.com/v1/geocoding?country=United+States&city=${city}&state=${states[state]}`,
-          {
-            method: "GET",
-
-            // Remove API key
-            headers: {
-              "X-Api-Key": process.env.X_API_KEY,
-            },
-            "Content-Type": "application/json",
-          }
-        )
-        .then((res) => res.json())
-        .then((res) => {
-          const { latitude, longitude } = res[0];
-          setLat(latitude);
-          setLng(longitude);
-        });
-    }
-  }, [city, state]);
-
   // Handle validation
   useEffect(() => {
     const errorObj = {};
@@ -66,8 +37,6 @@ const CreateSpot = () => {
     if (!address.length) errorObj.address = "Address is required";
     if (!city.length) errorObj.city = "City is required";
     if (!state.length) errorObj.state = "State is required";
-    if (!lat) errorObj.lat = "Latitude is required";
-    if (!lng) errorObj.lng = "Longitude is required";
     if (description.length < 30)
       errorObj.description = "Description needs a minimum of 30 characters";
     if (!name.length) errorObj.name = "Name is required";
@@ -94,8 +63,6 @@ const CreateSpot = () => {
     img3,
     img4,
     img5,
-    lat,
-    lng,
     name,
     price,
     state,
@@ -116,8 +83,6 @@ const CreateSpot = () => {
       address,
       city,
       state,
-      lat,
-      lng,
       description,
       name,
       price,
@@ -220,26 +185,6 @@ const CreateSpot = () => {
                 value={state}
                 onChange={(e) => setState(e.target.value)}
               />
-            </label>
-          </div>
-
-          <div className="lat">
-            <label htmlFor="lat">
-              <p>
-                Latitude
-                {errors.lat && <span className="error">{errors.lat}</span>}
-              </p>
-              <input type="text" name="lat" value={lat} onChange={(e) => {}} />
-            </label>
-          </div>
-
-          <div className="lng">
-            <label htmlFor="lng">
-              <p>
-                Longitude
-                {errors.lng && <span className="error">{errors.lng}</span>}
-              </p>
-              <input type="text" name="lng" value={lng} onChange={(e) => {}} />
             </label>
           </div>
         </div>

@@ -11,6 +11,7 @@ const {
   Booking,
   sequelize,
 } = require("../../db/models");
+const states = require("../../utils/states");
 
 // Validation for query parameters
 const validateQueryParams = [
@@ -326,8 +327,24 @@ const validateSpot = [
 // Create a spot
 router.post("/", validateSpot, async (req, res, next) => {
   const ownerId = req.user.id;
-  const { address, city, state, country, lat, lng, name, description, price } =
-    req.body;
+  const { address, city, state, country, name, description, price } = req.body;
+
+  const response = await fetch(
+    `https://api.api-ninjas.com/v1/geocoding?country=${"United States"}&city=${city}&state=${
+      states[state]
+    }`,
+    {
+      method: "GET",
+      headers: {
+        "X-Api-Key": process.env.X_API_KEY,
+      },
+      "Content-Type": "application/json",
+    }
+  );
+
+  const result = await response.json();
+
+  const { latitude, longitude } = result[0];
 
   const spot = await Spot.create({
     ownerId,
@@ -335,8 +352,8 @@ router.post("/", validateSpot, async (req, res, next) => {
     city,
     state,
     country,
-    lat,
-    lng,
+    lat: latitude,
+    lng: longitude,
     name,
     description,
     price,
@@ -482,16 +499,32 @@ router.put("/:spotId", validateSpot, async (req, res, next) => {
   }
 
   // Edit
-  const { address, city, state, country, lat, lng, name, description, price } =
-    req.body;
+  const { address, city, state, country, name, description, price } = req.body;
+
+  const response = await fetch(
+    `https://api.api-ninjas.com/v1/geocoding?country=${"United States"}&city=${city}&state=${
+      states[state]
+    }`,
+    {
+      method: "GET",
+      headers: {
+        "X-Api-Key": process.env.X_API_KEY,
+      },
+      "Content-Type": "application/json",
+    }
+  );
+
+  const result = await response.json();
+
+  const { latitude, longitude } = result[0];
 
   spot.update({
     address,
     city,
     state,
     country,
-    lat,
-    lng,
+    lat: latitude,
+    lng: longitude,
     name,
     description,
     price,
