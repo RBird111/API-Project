@@ -54,4 +54,8 @@ A clone of the AirBnB website.
 
 5. Start both the backend and frontend servers by running the `npm start` command.
 
-6. Website should be served on whatever port you specified in the `.env` file.
+---
+
+## Contact
+
+Feel free to reach out to me on [LinkedIn](https://www.linkedin.com/in/roosevelt-burden-83982026b/)!
