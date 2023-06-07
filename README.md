@@ -4,6 +4,8 @@ A clone of the AirBnB website.
 
 [Live Site](https://scpnb.onrender.com/)
 
+---
+
 ## Technologies Used
 
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
@@ -18,6 +20,36 @@ A clone of the AirBnB website.
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
-## Landing Page
+---
+
+## Photos
+
+### Landing Page
+
+![Landing](frontend/public/landing.png)
+
+### Single Spot
+
+![Single Spot](frontend/public/single_spot.png)
+
+---
 
 ## Getting Started
+
+1. Clone this repository.
+
+2. Install denpendencies for both the frontend and backend using the `npm install` command.
+
+3. Create a .env file using the .env.example provided.
+
+4. Set up the database by running the following commands:
+
+   ```
+   npx dotenv sequelize db:create
+   npx dotenv sequelize db:migrate
+   npx dotenv sequelize db:seed:all
+   ```
+
+5. Start both the backend and frontend servers by running the `npm start` command.
+
+6. Website should be served on whatever port you specified in the `.env` file.
