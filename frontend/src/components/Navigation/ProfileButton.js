@@ -84,6 +84,12 @@ function ProfileButton({ user }) {
                   <p>Manage Reviews</p>
                 </div>
               </NavLink>
+
+              <NavLink to={"/bookings/current"}>
+                <div className="manage-reviews">
+                  <p>Manage Bookings</p>
+                </div>
+              </NavLink>
             </div>
 
             <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createReview,
@@ -23,13 +23,20 @@ const ReviewModal = ({ spotId, review }) => {
   const [activeRating, setActiveRating] = useState(rating);
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setErrors({});
 
     if (!rating)
       setErrors({ rating: "Please provide a rating for your review." });
-    else if (input.length > 255) setErrors({review: "Review cannot exceed 255 characters."})
-    else setErrors({});
+    if (input.length > 255) {
+      setErrors({ review: "Review cannot exceed 255 characters." });
+    }
+  }, [input, rating]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (Object.values(errors).length) return;
 
     const newReview = {
       review: input,
