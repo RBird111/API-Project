@@ -13,6 +13,9 @@ const {
 } = require("../../db/models");
 const { states } = require("../../utils/states");
 
+// Fetch functionality for Node
+const fetch = require("node-fetch");
+
 // Validation for query parameters
 const validateQueryParams = [
   query("page")
