@@ -337,8 +337,6 @@ router.post("/", validateSpot, async (req, res, next) => {
 
   const result = await response.json();
 
-  console.log("RESULT =>", result);
-
   const { latitude, longitude } = result[0];
 
   const spot = await Spot.create({
