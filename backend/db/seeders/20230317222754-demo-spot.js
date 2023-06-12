@@ -39,7 +39,7 @@ module.exports = {
           price: 1900.25,
         },
         {
-          ownerId: 1,
+          ownerId: 3,
           address: "789 Test St.",
           city: "Shell Knob",
           state: "Missouri",
@@ -52,7 +52,7 @@ module.exports = {
           price: 830.0,
         },
         {
-          ownerId: 3,
+          ownerId: 4,
           address: "1789 Test St.",
           city: "Indian River",
           state: "Michigan",
@@ -65,7 +65,7 @@ module.exports = {
           price: 592.56,
         },
         {
-          ownerId: 4,
+          ownerId: 1,
           address: "2789 Test St.",
           city: "Blue Ridge",
           state: "Georgia",

@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 const router = require("express").Router();
 const { requireAuth, isAuthorized } = require("../../utils/auth");
 const { check, query } = require("express-validator");
@@ -14,7 +15,7 @@ const {
 const { states } = require("../../utils/states");
 
 // Fetch functionality for Node
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 
 // Validation for query parameters
 const validateQueryParams = [
