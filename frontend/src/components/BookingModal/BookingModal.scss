@@ -1,0 +1,23 @@
+.booking-modal {
+  * {
+    margin: 0;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 10px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}

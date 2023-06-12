@@ -53,6 +53,11 @@ function App() {
             <ManageReviews />
           </Route>
 
+          {/* TODO: Add Manage Bookings Page */}
+          <Route path={`/reviews/current`}>
+            <h1>Page Not Found</h1>
+          </Route>
+
           <Route>
             <h1>Page Not Found</h1>
           </Route>

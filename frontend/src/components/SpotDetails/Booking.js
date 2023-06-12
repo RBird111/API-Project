@@ -1,3 +1,6 @@
+import BookingModal from "../BookingModal";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+
 const Booking = ({ spot }) => {
   return (
     <div className="booking">
@@ -14,8 +17,11 @@ const Booking = ({ spot }) => {
           : "New"}
       </p>
 
-      <button onClick={() => alert("Feature not yet implemented")}>
-        Reserve
+      <button>
+        <OpenModalMenuItem
+          itemText="Reserve"
+          modalComponent={<BookingModal spot={spot} />}
+        />
       </button>
     </div>
   );
