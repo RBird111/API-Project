@@ -296,16 +296,6 @@ const validateSpot = [
     .exists({ checkFalsy: true })
     .withMessage("Country is required"),
 
-  check("lat")
-    .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage("Latitude is not valid"),
-
-  check("lng")
-    .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage("Longitude is not valid"),
-
   check("name")
     .exists({ checkFalsy: true })
     .isLength({ max: 50 })
@@ -343,6 +333,8 @@ router.post("/", validateSpot, async (req, res, next) => {
   );
 
   const result = await response.json();
+
+  console.log("RESULT =>", result);
 
   const { latitude, longitude } = result[0];
 
