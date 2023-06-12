@@ -28,6 +28,7 @@ const ReviewModal = ({ spotId, review }) => {
 
     if (!rating)
       setErrors({ rating: "Please provide a rating for your review." });
+    else if (input.length > 255) setErrors({review: "Review cannot exceed 255 characters."})
     else setErrors({});
 
     const newReview = {
@@ -86,6 +87,8 @@ const ReviewModal = ({ spotId, review }) => {
           onChange={(e) => setInput(e.target.value)}
           onMouseEnter={() => setActiveRating(rating)}
         />
+
+        <div>{errors?.review && <p className="error">{errors.review}</p>}</div>
 
         <div
           className="star-rating"
