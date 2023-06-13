@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useModal } from "../../context/Modal";
 import "./BookingModal.scss";
 import {
   createBooking,
   deleteBooking,
+  editBooking,
   getSpotBookings,
 } from "../../store/bookings";
-import { useModal } from "../../context/Modal";
 
 const getTommorow = (startDate) => {
   const date = new Date(startDate);
@@ -14,9 +16,14 @@ const getTommorow = (startDate) => {
   return date;
 };
 
-const BookingModal = ({ spot, user }) => {
+const formatDate = (str) => {
+  str = str.split("T")[0].split("-");
+  return [str[1], str[2], str[0]].join("/");
+};
+
+const BookingModal = ({ spot, user, bookingData }) => {
   const dispatch = useDispatch();
-  const { closeModal } = useModal();
+  const { closeModal, setModalContent } = useModal();
 
   const today = new Date();
 
@@ -25,12 +32,21 @@ const BookingModal = ({ spot, user }) => {
     (booking) => new Date(booking.endDate) >= today
   );
 
+  if (bookingData) delete bookings[bookingData.id];
+
   const [startDate, setStartDate] = useState(today);
   const [tomorrow, setTomorrow] = useState(getTommorow(today));
   const [endDate, setEndDate] = useState(tomorrow);
   const [errors, setErrors] = useState({});
 
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (bookingData) {
+      setStartDate(new Date(bookingData.startDate));
+      setEndDate(new Date(bookingData.endDate));
+    }
+  }, [bookingData]);
 
   // Updates the minimum end date
   useEffect(() => {
@@ -63,13 +79,23 @@ const BookingModal = ({ spot, user }) => {
 
     setErrors({});
 
-    const booking = {
-      startDate,
-      endDate,
+    const booking = () => {
+      if (bookingData)
+        return {
+          ...bookingData,
+          startDate,
+          endDate,
+        };
+
+      return {
+        startDate,
+        endDate,
+      };
     };
 
     try {
-      await dispatch(createBooking(spot.id, booking));
+      if (bookingData) await dispatch(editBooking(booking()));
+      else await dispatch(createBooking(spot.id, booking()));
     } catch (e) {
       let err = await e.json();
       return setErrors(err.errors);
@@ -82,20 +108,38 @@ const BookingModal = ({ spot, user }) => {
 
   return (
     <div className="booking-modal">
-      <h1>{spot.name} Booking</h1>
+      {!bookingData ? <h1>{spot.name} Booking</h1> : <h1>Update Booking</h1>}
 
       <div className="existing-bookings">
         <p className="b-title">Dates already booked:</p>
         {bookings.length !== 0 ? (
           bookings.map((booking) => (
             <p key={booking.id}>
-              {new Date(booking.startDate).toLocaleDateString()} -{" "}
-              {new Date(booking.endDate).toLocaleDateString()}
+              {/* {new Date(booking.startDate).toLocaleDateString()} -{" "}
+              {new Date(booking.endDate).toLocaleDateString()} */}
+              {formatDate(new Date(booking.startDate).toISOString())} -{" "}
+              {formatDate(new Date(booking.endDate).toISOString())}
               {user && user.id === booking.userId && (
-                <i
-                  onClick={(e) => handleDelete(e, booking.id)}
-                  className="fa-solid fa-trash"
-                />
+                <>
+                  {!bookingData && (
+                    <i
+                      onClick={(e) => {
+                        setModalContent(
+                          <BookingModal
+                            spot={spot}
+                            user={user}
+                            bookingData={booking}
+                          />
+                        );
+                      }}
+                      className="fa-solid fa-pen-to-square"
+                    />
+                  )}
+                  <i
+                    onClick={(e) => handleDelete(e, booking.id)}
+                    className="fa-solid fa-trash"
+                  />
+                </>
               )}
             </p>
           ))
@@ -136,7 +180,7 @@ const BookingModal = ({ spot, user }) => {
           </label>
         </div>
 
-        <button type="submit">Reserve</button>
+        <button type="submit">{!bookingData ? "Reserve" : "Update"}</button>
       </form>
     </div>
   );

@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
     // Check if booking dates are in conflict with any other bookings
     async hasConflict(update = false) {
       // Grab start and end dates from booking instance
-      const startDate = this.startDate.getTime();
+      const startDate = new Date(this.startDate);
 
-      const endDate = this.endDate.getTime();
+      const endDate = new Date(this.endDate);
 
       const { Op } = require("sequelize");
       // Only consider bookings for the same spot
@@ -26,18 +26,10 @@ module.exports = (sequelize, DataTypes) => {
 
       for (const booking of allBookings) {
         const [sY, sM, sD] = booking.startDate.split("-");
-        const sDate = new Date(
-          parseInt(sY),
-          parseInt(sM) - 1,
-          parseInt(sD)
-        ).getTime();
+        const sDate = new Date(parseInt(sY), parseInt(sM) - 1, parseInt(sD));
 
         const [eY, eM, eD] = booking.endDate.split("-");
-        const eDate = new Date(
-          parseInt(eY),
-          parseInt(eM) - 1,
-          parseInt(eD)
-        ).getTime();
+        const eDate = new Date(parseInt(eY), parseInt(eM) - 1, parseInt(eD));
 
         // If a booking instance has conflicting start/end dates
         if (
