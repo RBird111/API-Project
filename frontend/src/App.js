@@ -11,6 +11,7 @@ import CreateSpot from "./components/CreateSpot";
 import UpdateSpot from "./components/UpdateSpot";
 import ManageSpots from "./components/ManageSpots";
 import ManageReviews from "./components/ManageReviews";
+import ManageBookings from "./components/ManageBookings";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,9 +54,8 @@ function App() {
             <ManageReviews />
           </Route>
 
-          {/* TODO: Add Manage Bookings Page */}
-          <Route path={`/reviews/current`}>
-            <h1>Page Not Found</h1>
+          <Route path={`/bookings/current`}>
+            <ManageBookings />
           </Route>
 
           <Route>

@@ -14,16 +14,21 @@
     margin: 10px;
   }
 
-  .b-title {
-    font-weight: bold;
-  }
-
   .existing-bookings {
     margin-bottom: 10px;
+
+    .b-title {
+      font-weight: bold;
+    }
+
+    .owned {
+      color: #ff5a5f;
+    }
 
     i {
       cursor: pointer;
       margin-left: 8px;
+      color: #808080;
 
       &:hover {
         color: #ff5a5f;

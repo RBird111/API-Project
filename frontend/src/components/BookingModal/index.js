@@ -5,10 +5,10 @@ import { useModal } from "../../context/Modal";
 import "./BookingModal.scss";
 import {
   createBooking,
-  deleteBooking,
   editBooking,
   getSpotBookings,
 } from "../../store/bookings";
+import ConfirmDelete from "../ManageSpots/ConfirmDelete";
 
 const getTommorow = (startDate) => {
   const date = new Date(startDate);
@@ -16,8 +16,11 @@ const getTommorow = (startDate) => {
   return date;
 };
 
-const formatDate = (str) => {
+export const formatDate = (date) => {
+  let str = new Date(date).toISOString();
+  // [[%Y], [%M], [%D]]
   str = str.split("T")[0].split("-");
+  // "%M/%D/%Y"
   return [str[1], str[2], str[0]].join("/");
 };
 
@@ -62,18 +65,6 @@ const BookingModal = ({ spot, user, bookingData }) => {
     dispatch(getSpotBookings(spot.id)).then(() => setIsLoaded(true));
   }, [dispatch, spot.id]);
 
-  const handleDelete = async (e, bookingId) => {
-    e.preventDefault();
-
-    try {
-      await dispatch(deleteBooking(bookingId));
-      await dispatch(getSpotBookings(spot.id));
-    } catch (e) {
-      let err = await e.json();
-      return setErrors(err.errors);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -111,14 +102,14 @@ const BookingModal = ({ spot, user, bookingData }) => {
       {!bookingData ? <h1>{spot.name} Booking</h1> : <h1>Update Booking</h1>}
 
       <div className="existing-bookings">
-        <p className="b-title">Dates already booked:</p>
+        <p className="b-title">Reserved Dates:</p>
         {bookings.length !== 0 ? (
           bookings.map((booking) => (
-            <p key={booking.id}>
-              {/* {new Date(booking.startDate).toLocaleDateString()} -{" "}
-              {new Date(booking.endDate).toLocaleDateString()} */}
-              {formatDate(new Date(booking.startDate).toISOString())} -{" "}
-              {formatDate(new Date(booking.endDate).toISOString())}
+            <p
+              key={booking.id}
+              className={user.id === booking.userId ? "owned" : ""}
+            >
+              {formatDate(booking.startDate)} - {formatDate(booking.endDate)}
               {user && user.id === booking.userId && (
                 <>
                   {!bookingData && (
@@ -136,7 +127,14 @@ const BookingModal = ({ spot, user, bookingData }) => {
                     />
                   )}
                   <i
-                    onClick={(e) => handleDelete(e, booking.id)}
+                    onClick={(e) =>
+                      setModalContent(
+                        <ConfirmDelete
+                          type={"Booking"}
+                          bookingId={booking.id}
+                        />
+                      )
+                    }
                     className="fa-solid fa-trash"
                   />
                 </>

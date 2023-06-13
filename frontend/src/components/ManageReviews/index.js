@@ -14,20 +14,22 @@ const ManageReviews = () => {
     dispatch(getUserReviews());
   }, [dispatch]);
 
-  if (Object.values(reviews).length === 0) return null;
-
   return (
     <div className="manage-reviews-page">
       <h1>Manage Reviews</h1>
 
-      {Object.values(reviews).map((review) => (
-        <SpotReview
-          key={review?.id}
-          type={"user"}
-          userId={user?.id}
-          review={review}
-        />
-      ))}
+      {Object.values(reviews).length !== 0 ? (
+        Object.values(reviews).map((review) => (
+          <SpotReview
+            key={review?.id}
+            type={"user"}
+            userId={user?.id}
+            review={review}
+          />
+        ))
+      ) : (
+        <p>No Reviews</p>
+      )}
     </div>
   );
 };
