@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./BookingModal.scss";
-import { createBooking, getSpotBookings } from "../../store/bookings";
+import {
+  createBooking,
+  deleteBooking,
+  getSpotBookings,
+} from "../../store/bookings";
 import { useModal } from "../../context/Modal";
 
 const getTommorow = (startDate) => {
@@ -31,16 +35,33 @@ const BookingModal = ({ spot, user }) => {
   // Updates the minimum end date
   useEffect(() => {
     setTomorrow(getTommorow(startDate));
-    setEndDate(tomorrow);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate]);
+
+  useEffect(() => {
+    if (endDate < tomorrow) setEndDate(tomorrow);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tomorrow]);
 
   useEffect(() => {
     dispatch(getSpotBookings(spot.id)).then(() => setIsLoaded(true));
   }, [dispatch, spot.id]);
 
+  const handleDelete = async (e, bookingId) => {
+    e.preventDefault();
+
+    try {
+      await dispatch(deleteBooking(bookingId));
+      await dispatch(getSpotBookings(spot.id));
+    } catch (e) {
+      let err = await e.json();
+      return setErrors(err.errors);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setErrors({});
 
     const booking = {
       startDate,
@@ -71,7 +92,10 @@ const BookingModal = ({ spot, user }) => {
               {new Date(booking.startDate).toLocaleDateString()} -{" "}
               {new Date(booking.endDate).toLocaleDateString()}
               {user && user.id === booking.userId && (
-                <i onClick={() => alert("coming soon...")} className="fa-solid fa-trash" />
+                <i
+                  onClick={(e) => handleDelete(e, booking.id)}
+                  className="fa-solid fa-trash"
+                />
               )}
             </p>
           ))
@@ -106,11 +130,7 @@ const BookingModal = ({ spot, user }) => {
               type="date"
               name="end"
               min={tomorrow.toISOString().split("T")[0]}
-              value={
-                endDate > startDate
-                  ? endDate.toISOString().split("T")[0]
-                  : tomorrow.toISOString().split("T")[0]
-              }
+              value={endDate.toISOString().split("T")[0]}
               onChange={(e) => setEndDate(new Date(e.target.value))}
             />
           </label>

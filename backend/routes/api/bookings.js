@@ -72,7 +72,7 @@ router.put("/:bookingId", validateBooking, async (req, res, next) => {
   await booking.validate();
 
   // Check for booking conflict
-  const conflict = await booking.hasConflict();
+  const conflict = await booking.hasConflict(true);
   if (conflict instanceof Error) return next(conflict);
 
   await booking.save();

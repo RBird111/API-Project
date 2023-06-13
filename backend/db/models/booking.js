@@ -4,14 +4,26 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Booking extends Model {
     // Check if booking dates are in conflict with any other bookings
-    async hasConflict() {
+    async hasConflict(update = false) {
       // Grab start and end dates from booking instance
       const startDate = this.startDate.getTime();
 
       const endDate = this.endDate.getTime();
 
+      const { Op } = require("sequelize");
+      // Only consider bookings for the same spot
+      const where = {
+        spotId: this.spotId,
+      };
+      // If we're updating a booking than exclude the booking being updated
+      if (update) where.id = { [Op.not]: this.id };
+
       // Grab dates from all booking instances
-      const allBookings = await Booking.findAll({ raw: true });
+      const allBookings = await Booking.findAll({
+        where,
+        raw: true,
+      });
+
       for (const booking of allBookings) {
         const [sY, sM, sD] = booking.startDate.split("-");
         const sDate = new Date(
