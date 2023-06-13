@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./BookingModal.scss";
-import { getSpotBookings } from "../../store/bookings";
+import { createBooking, getSpotBookings } from "../../store/bookings";
+import { useModal } from "../../context/Modal";
 
 const getTommorow = (startDate) => {
   const date = new Date(startDate);
@@ -9,22 +10,29 @@ const getTommorow = (startDate) => {
   return date;
 };
 
-const BookingModal = ({ spot }) => {
+const BookingModal = ({ spot, user }) => {
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
 
   const today = new Date();
 
-  const bookings = useSelector((state) => state.bookings.spotBookings);
+  let bookings = useSelector((state) => state.bookings.spotBookings);
+  bookings = Object.values(bookings).filter(
+    (booking) => new Date(booking.endDate) >= today
+  );
 
   const [startDate, setStartDate] = useState(today);
   const [tomorrow, setTomorrow] = useState(getTommorow(today));
   const [endDate, setEndDate] = useState(tomorrow);
+  const [errors, setErrors] = useState({});
 
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Updates the minimum end date
   useEffect(() => {
     setTomorrow(getTommorow(startDate));
+    setEndDate(tomorrow);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate]);
 
   useEffect(() => {
@@ -33,6 +41,20 @@ const BookingModal = ({ spot }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const booking = {
+      startDate,
+      endDate,
+    };
+
+    try {
+      await dispatch(createBooking(spot.id, booking));
+    } catch (e) {
+      let err = await e.json();
+      return setErrors(err.errors);
+    }
+
+    closeModal();
   };
 
   if (!isLoaded) return <div style={{ padding: "10px" }}>Loading...</div>;
@@ -43,17 +65,27 @@ const BookingModal = ({ spot }) => {
 
       <div className="existing-bookings">
         <p className="b-title">Dates already booked:</p>
-        {Object.values(bookings).length !== 0 ? (
-          Object.values(bookings).map((booking) => (
+        {bookings.length !== 0 ? (
+          bookings.map((booking) => (
             <p key={booking.id}>
               {new Date(booking.startDate).toLocaleDateString()} -{" "}
               {new Date(booking.endDate).toLocaleDateString()}
+              {user && user.id === booking.userId && (
+                <i onClick={() => alert("coming soon...")} className="fa-solid fa-trash" />
+              )}
             </p>
           ))
         ) : (
           <p>Choose any dates you'd like!</p>
         )}
       </div>
+
+      {errors &&
+        Object.values(errors).map((error) => (
+          <p className="error" key={error}>
+            {error}
+          </p>
+        ))}
 
       <form onSubmit={handleSubmit}>
         <div>

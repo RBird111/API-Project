@@ -32,7 +32,7 @@ const Booking = ({ spot }) => {
         {user && user.id !== spot.ownerId ? (
           <OpenModalMenuItem
             itemText="Reserve"
-            modalComponent={<BookingModal spot={spot} />}
+            modalComponent={<BookingModal user={user} spot={spot} />}
           />
         ) : user && user.id === spot.ownerId ? (
           <p>Cannot Reserve Own Spot</p>

@@ -20,6 +20,15 @@
 
   .existing-bookings {
     margin-bottom: 10px;
+
+    i {
+      cursor: pointer;
+      margin-left: 8px;
+
+      &:hover {
+        color: #ff5a5f;
+      }
+    }
   }
 
   form {
