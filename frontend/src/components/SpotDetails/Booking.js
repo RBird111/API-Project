@@ -1,7 +1,18 @@
+import { useSelector } from "react-redux";
 import BookingModal from "../BookingModal";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 
 const Booking = ({ spot }) => {
+  const user = useSelector((state) => state.session.user);
+
+  const style = () => {
+    if (user && user.id !== spot.ownerId) return null;
+    else
+      return {
+        backgroundColor: "#ababab",
+      };
+  };
+
   return (
     <div className="booking">
       <p>
@@ -17,11 +28,17 @@ const Booking = ({ spot }) => {
           : "New"}
       </p>
 
-      <button>
-        <OpenModalMenuItem
-          itemText="Reserve"
-          modalComponent={<BookingModal spot={spot} />}
-        />
+      <button style={{ ...style() }}>
+        {user && user.id !== spot.ownerId ? (
+          <OpenModalMenuItem
+            itemText="Reserve"
+            modalComponent={<BookingModal spot={spot} />}
+          />
+        ) : user && user.id === spot.ownerId ? (
+          <p>Cannot Reserve Own Spot</p>
+        ) : (
+          <p>Must be Logged In to Reserve</p>
+        )}
       </button>
     </div>
   );

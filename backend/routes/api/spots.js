@@ -238,7 +238,6 @@ router.get("/:spotId/bookings", requireAuth, async (req, res, next) => {
 
     if (!ownSpot) {
       delete bookObj.User;
-      delete bookObj.id;
       delete bookObj.userId;
       delete bookObj.createdAt;
       delete bookObj.updatedAt;

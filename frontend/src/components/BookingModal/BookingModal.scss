@@ -1,11 +1,25 @@
 .booking-modal {
+  width: 50vmin;
+
   * {
     margin: 0;
   }
 
-  h1 {
+  h1,
+  p {
     text-align: center;
+  }
+
+  h1 {
     margin: 10px;
+  }
+
+  .b-title {
+    font-weight: bold;
+  }
+
+  .existing-bookings {
+    margin-bottom: 10px;
   }
 
   form {
@@ -14,10 +28,21 @@
     justify-content: center;
     align-items: center;
 
-    label {
+    div {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+
+      label {
+        margin: 0 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    button {
+      width: 57%;
+      padding: 7px 14px;
+      margin: 10px 0;
     }
   }
 }
