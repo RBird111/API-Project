@@ -5,10 +5,54 @@ import { getUserBookings } from "../../store/bookings";
 import { useModal } from "../../context/Modal";
 import BookingModal, { formatDate } from "../BookingModal";
 import "./ManageBookings.scss";
+import { NavLink } from "react-router-dom";
+
+const BookingCard = ({ booking, user }) => {
+  const { startDate, endDate } = booking;
+  const spot = booking.Spot;
+  const { setModalContent } = useModal();
+
+  return (
+    <div className="bkc-wrap">
+      <NavLink to={`/spots/${spot.id}`}>
+        <div className="booking-card">
+          <h2>Booking for {spot.name}</h2>
+
+          <img src={spot.previewImage} alt="spot preview" />
+
+          <p className="arrive">
+            Arrive: <span>{formatDate(startDate)}</span>
+          </p>
+          <p>
+            Depart: <span>{formatDate(endDate)}</span>
+          </p>
+        </div>
+      </NavLink>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          className="update-btn"
+          onClick={(e) =>
+            setModalContent(
+              <BookingModal spot={spot} user={user} bookingData={booking} />
+            )
+          }
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const ManageBookings = () => {
   const dispatch = useDispatch();
-  const { setModalContent } = useModal();
 
   const user = useSelector((state) => state.session.user);
 
@@ -30,31 +74,15 @@ const ManageBookings = () => {
     <div className="manage-bookings">
       <h1>Manage Bookings</h1>
 
-      {bookings.length !== 0 ? (
-        bookings.map((booking) => (
-          <div key={booking.id}>
-            <h2>Booking for {booking.Spot.name}</h2>
-
-            <p>
-              {formatDate(booking.startDate)} - {formatDate(booking.endDate)}
-              <i
-                onClick={(e) => {
-                  setModalContent(
-                    <BookingModal
-                      spot={booking.Spot}
-                      user={user}
-                      bookingData={booking}
-                    />
-                  );
-                }}
-                className="fa-solid fa-pen-to-square"
-              />
-            </p>
-          </div>
-        ))
-      ) : (
-        <p>You Haven't Booked Anything Yet!</p>
-      )}
+      <div className="booking-wrap">
+        {bookings.length !== 0 ? (
+          bookings.map((booking) => (
+            <BookingCard key={booking.id} user={user} booking={booking} />
+          ))
+        ) : (
+          <p>You Haven't Booked Anything Yet!</p>
+        )}
+      </div>
     </div>
   );
 };
