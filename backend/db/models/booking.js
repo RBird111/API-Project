@@ -34,7 +34,8 @@ module.exports = (sequelize, DataTypes) => {
         // If a booking instance has conflicting start/end dates
         if (
           (startDate < eDate && startDate > sDate) ||
-          (endDate > sDate && endDate < eDate)
+          (endDate > sDate && endDate < eDate) ||
+          (startDate <= sDate && endDate >= eDate)
         ) {
           const errors = {};
           // Add error if start date conflicts
@@ -45,6 +46,11 @@ module.exports = (sequelize, DataTypes) => {
           // Add error if end date conflicts
           if (endDate > sDate && endDate < eDate) {
             errors.endDate = "End date conflicts with an existing booking";
+          }
+
+          // Add error if booking overlaps
+          if (startDate <= sDate && endDate >= eDate) {
+            errors.overlap = "Dates overlap an existing booking.";
           }
 
           // Create error object

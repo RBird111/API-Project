@@ -14,9 +14,9 @@ const ManageBookings = () => {
 
   const today = new Date();
   const userBookings = useSelector((state) => state.bookings.userBookings);
-  const bookings = Object.values(userBookings).filter(
-    (booking) => today <= new Date(booking.endDate)
-  );
+  const bookings = Object.values(userBookings)
+    .filter((booking) => today <= new Date(booking.endDate))
+    .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
   const [isLoaded, setIsLoaded] = useState(false);
 

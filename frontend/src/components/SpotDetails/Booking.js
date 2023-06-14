@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux";
 import BookingModal from "../BookingModal";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import { useModal } from "../../context/Modal";
+import LoginFormModal from "../LoginFormModal";
 
 const Booking = ({ spot }) => {
   const user = useSelector((state) => state.session.user);
+  const { setModalContent } = useModal();
 
   const style = () => {
     if (user && user.id !== spot.ownerId) return null;
@@ -35,9 +38,11 @@ const Booking = ({ spot }) => {
             modalComponent={<BookingModal user={user} spot={spot} />}
           />
         ) : user && user.id === spot.ownerId ? (
-          <p>Cannot Reserve Own Spot</p>
+          <p style={{ cursor: "default" }}>Cannot Reserve Own Spot</p>
         ) : (
-          <p>Must be Logged In to Reserve</p>
+          <p onClick={() => setModalContent(<LoginFormModal />)}>
+            Must be Logged In to Reserve
+          </p>
         )}
       </button>
     </div>

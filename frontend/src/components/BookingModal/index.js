@@ -31,9 +31,9 @@ const BookingModal = ({ spot, user, bookingData }) => {
   const today = new Date();
 
   let bookings = useSelector((state) => state.bookings.spotBookings);
-  bookings = Object.values(bookings).filter(
-    (booking) => new Date(booking.endDate) >= today
-  );
+  bookings = Object.values(bookings)
+    .filter((booking) => new Date(booking.endDate) >= today)
+    .sort((a, b) => new Date(a.startDate) - new Date(b.endDate));
 
   if (bookingData) delete bookings[bookingData.id];
 
