@@ -19,18 +19,19 @@
 }
 
 .loading-icon {
-  width: 100vw;
-  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
 
-  .spin-icon {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .spin-icon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +39,7 @@
     width: 15vmin;
     height: 15vmin;
 
-    border-radius: 100%;
+    border-radius: 50%;
     border: 10px solid rgba(211, 211, 211, 0.541);
     border-top: 10px solid #ff5a5f;
 
