@@ -5,6 +5,31 @@ import { useHistory } from "react-router-dom";
 import "./CreateSpot.scss";
 import { addImageToSpot, createSpot, getSpotDetails } from "../../store/spot";
 
+const ImagePreview = ({ file }) => {
+  const url = URL.createObjectURL(file);
+
+  const returnFileSize = (number) => {
+    if (number < 1024) {
+      return `${number} bytes`;
+    } else if (number >= 1024 && number < 1048576) {
+      return `${(number / 1024).toFixed(1)} KB`;
+    } else if (number >= 1048576) {
+      return `${(number / 1048576).toFixed(1)} MB`;
+    }
+  };
+
+  return (
+    <div className="img-preview">
+      <div className="p-wrap">
+        <p className="first">{file.name}</p>
+        <p>{returnFileSize(file.size)}</p>
+      </div>
+
+      <img src={url} alt="preview" />
+    </div>
+  );
+};
+
 const CreateSpot = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -39,6 +64,7 @@ const CreateSpot = () => {
 
     //Image errors
     if (!images.length) errorObj.images = "Must have at least one image.";
+    if (images.length > 5) errorObj.images = "Maximum of five images.";
 
     setValidations(errorObj);
   }, [address, city, country, description, images, name, price, state]);
@@ -219,10 +245,10 @@ const CreateSpot = () => {
         <div className="part5">
           <h3>Liven up your spot with photos</h3>
 
-          <p>Submit at least one photo to publish your spot.</p>
+          <p>Submit one to five photos to publish your spot.</p>
 
           <label>
-            Upload Your Images
+            <span className="l-span">Upload Your Images</span>
             <input
               type="file"
               accept=".jpg, .jpeg, .png"
@@ -231,6 +257,19 @@ const CreateSpot = () => {
             />
             {errors.images && <span className="error">{errors.images}</span>}
           </label>
+
+          <div className="img-gallery">
+            {images.length === 0 ? (
+              <p style={{ marginBottom: "10px" }}>
+                No Files Currently Selected
+              </p>
+            ) : (
+              Array.from(images).map((file, idx) => (
+                <ImagePreview key={idx} file={file} />
+              ))
+            )}
+          </div>
+          {errors.images && <span className="error">{errors.images}</span>}
         </div>
 
         <button type="submit">Create Spot</button>
