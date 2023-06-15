@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 
 import "./CreateSpot.scss";
 import { addImageToSpot, createSpot, getSpotDetails } from "../../store/spot";
+import LoadingIcon from "../LoadingIcon";
 
 const ImagePreview = ({ file }) => {
   const url = URL.createObjectURL(file);
@@ -33,6 +34,8 @@ const ImagePreview = ({ file }) => {
 const CreateSpot = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [country, setCountry] = useState("");
   const [address, setAdress] = useState("");
@@ -73,11 +76,16 @@ const CreateSpot = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     // Set errors
     setErrors(validations);
 
     // If there are errors alert user and return
-    if (Object.values(validations).length > 0) return;
+    if (Object.values(validations).length > 0) {
+      setIsLoading(false);
+      return;
+    }
 
     const spotDetails = {
       country,
@@ -89,24 +97,33 @@ const CreateSpot = () => {
       price,
     };
 
-    // Create spot
-    const spot = await dispatch(createSpot(spotDetails));
+    try {
+      // Create spot
+      const spot = await dispatch(createSpot(spotDetails));
 
-    // Add images to spot
-    const imgArr = Array.from(images);
-    for (const idx in imgArr) {
-      // If first image, set it to preview
-      let preview = idx === "0";
-      await dispatch(addImageToSpot(spot.id, { image: imgArr[idx], preview }));
-    }
+      // Add images to spot
+      const imgArr = Array.from(images);
+      for (const idx in imgArr) {
+        // If first image, set it to preview
+        let preview = idx === "0";
+        await dispatch(
+          addImageToSpot(spot.id, { image: imgArr[idx], preview })
+        );
+      }
 
-    if (spot) {
       await dispatch(getSpotDetails(spot.id));
+      setIsLoading(false);
 
       // Redirect to spot detail page
       history.push(`/spots/${spot.id}`);
+    } catch (e) {
+      const err = await e.json();
+      setErrors(err.errors);
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) return <LoadingIcon />;
 
   return (
     <div className="create-spot">

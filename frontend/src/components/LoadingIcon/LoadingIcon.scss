@@ -1,0 +1,53 @@
+@keyframes spinright {
+  0% {
+    transform: rotate(0turn);
+  }
+
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes spinleft {
+  0% {
+    transform: rotate(0turn);
+  }
+
+  100% {
+    transform: rotate(-1turn);
+  }
+}
+
+.loading-icon {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .spin-icon {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 15vmin;
+    height: 15vmin;
+
+    border-radius: 100%;
+    border: 10px solid rgba(211, 211, 211, 0.541);
+    border-top: 10px solid #ff5a5f;
+
+    animation: spinright 4.2s linear infinite;
+
+    .spin-logo {
+      width: 10vmin;
+      height: 10vmin;
+      animation: spinleft 2.1s linear infinite;
+    }
+  }
+}
