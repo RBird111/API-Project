@@ -354,33 +354,42 @@ router.post("/", validateSpot, async (req, res, next) => {
   res.json(spot);
 });
 
+// AWS
+const { singleFileUpload, singleMulterUpload } = require("../../awsS3");
+
 // Add image to a spot based on the spot's ID
-router.post("/:spotId/images", requireAuth, async (req, res, next) => {
-  // Check if spot exists
-  const spot = await Spot.findByPk(req.params.spotId);
-  if (!spot) return Spot.notFound(next);
+router.post(
+  "/:spotId/images",
+  singleMulterUpload("image"),
+  requireAuth,
+  async (req, res, next) => {
+    // Check if spot exists
+    const spot = await Spot.findByPk(req.params.spotId);
+    if (!spot) return Spot.notFound(next);
 
-  // Check if authorized
-  const auth = isAuthorized(req, spot.ownerId);
-  if (auth instanceof Error) {
-    return next(auth);
+    // Check if authorized
+    const auth = isAuthorized(req, spot.ownerId);
+    if (auth instanceof Error) {
+      return next(auth);
+    }
+
+    // Add image
+    const { preview } = req.body;
+    const url = await singleFileUpload({ file: req.file, public: true });
+
+    const spotImage = await SpotImage.create({
+      spotId: req.params.spotId,
+      url,
+      preview,
+    });
+
+    res.json({
+      id: spotImage.id,
+      url: spotImage.url,
+      preview: spotImage.preview,
+    });
   }
-
-  // Add image
-  const { url, preview } = req.body;
-
-  const spotImage = await SpotImage.create({
-    spotId: req.params.spotId,
-    url,
-    preview,
-  });
-
-  res.json({
-    id: spotImage.id,
-    url: spotImage.url,
-    preview: spotImage.preview,
-  });
-});
+);
 
 // Validate review body
 const validateReview = [

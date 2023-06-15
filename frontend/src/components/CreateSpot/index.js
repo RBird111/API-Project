@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 import "./CreateSpot.scss";
-import { addImageToSpot, createSpot, getAllSpots } from "../../store/spot";
+import { addImageToSpot, createSpot, getSpotDetails } from "../../store/spot";
 
 const CreateSpot = () => {
   const dispatch = useDispatch();
@@ -16,12 +16,7 @@ const CreateSpot = () => {
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
-
-  const [img1, setImg1] = useState("");
-  const [img2, setImg2] = useState("");
-  const [img3, setImg3] = useState("");
-  const [img4, setImg4] = useState("");
-  const [img5, setImg5] = useState("");
+  const [images, setImages] = useState([]);
 
   // Holds errors until submit
   const [validations, setValidations] = useState({});
@@ -43,30 +38,10 @@ const CreateSpot = () => {
     if (!price) errorObj.price = "Price is required";
 
     //Image errors
-    const images = [img1, img2, img3, img4, img5];
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].length > 0 && !images[i].match(/(.png|.jpg|.jpeg)$/g))
-        errorObj[`img${i + 1}`] = "Image URL must end in .png, .jpg, or .jpeg";
-
-      if (i === 0 && !images[i].length)
-        errorObj.img1 = "Preview image is required";
-    }
+    if (!images.length) errorObj.images = "Must have at least one image.";
 
     setValidations(errorObj);
-  }, [
-    address,
-    city,
-    country,
-    description,
-    img1,
-    img2,
-    img3,
-    img4,
-    img5,
-    name,
-    price,
-    state,
-  ]);
+  }, [address, city, country, description, images, name, price, state]);
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -92,18 +67,15 @@ const CreateSpot = () => {
     const spot = await dispatch(createSpot(spotDetails));
 
     // Add images to spot
-    const images = [img1, img2, img3, img4, img5];
-    for (const idx in images) {
-      if (images[idx]) {
-        // If first image, set it to preview
-        let preview = idx === "0" ? true : false;
-        await dispatch(addImageToSpot(spot.id, { url: images[idx], preview }));
-      }
+    const imgArr = Array.from(images);
+    for (const idx in imgArr) {
+      // If first image, set it to preview
+      let preview = idx === "0";
+      await dispatch(addImageToSpot(spot.id, { image: imgArr[idx], preview }));
     }
 
     if (spot) {
-      // Get all spots (update landing page)
-      await dispatch(getAllSpots());
+      await dispatch(getSpotDetails(spot.id));
 
       // Redirect to spot detail page
       history.push(`/spots/${spot.id}`);
@@ -247,47 +219,18 @@ const CreateSpot = () => {
         <div className="part5">
           <h3>Liven up your spot with photos</h3>
 
-          <p>Submit a link to at least one photo to publish your spot.</p>
+          <p>Submit at least one photo to publish your spot.</p>
 
-          <input
-            placeholder="Preview Image URL"
-            type="text"
-            value={img1}
-            onChange={(e) => setImg1(e.target.value)}
-          />
-          {errors.img1 && <span className="error">{errors.img1}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img2}
-            onChange={(e) => setImg2(e.target.value)}
-          />
-          {errors.img2 && <span className="error">{errors.img2}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img3}
-            onChange={(e) => setImg3(e.target.value)}
-          />
-          {errors.img3 && <span className="error">{errors.img3}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img4}
-            onChange={(e) => setImg4(e.target.value)}
-          />
-          {errors.img4 && <span className="error">{errors.img4}</span>}
-
-          <input
-            type="text"
-            placeholder="Image URL"
-            value={img5}
-            onChange={(e) => setImg5(e.target.value)}
-          />
-          {errors.img5 && <span className="error">{errors.img5}</span>}
+          <label>
+            Upload Your Images
+            <input
+              type="file"
+              accept=".jpg, .jpeg, .png"
+              multiple
+              onChange={(e) => setImages(e.target.files)}
+            />
+            {errors.images && <span className="error">{errors.images}</span>}
+          </label>
         </div>
 
         <button type="submit">Create Spot</button>

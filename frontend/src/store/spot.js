@@ -1,3 +1,4 @@
+import { normalize } from ".";
 import { csrfFetch } from "./csrf";
 
 // ---TYPES--- \\
@@ -132,23 +133,28 @@ export const deleteSpot = (spotId) => async (dispatch) => {
   return errors;
 };
 
-export const addImageToSpot = (spotId, image) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(image),
-  });
+export const addImageToSpot =
+  (spotId, { image, preview }) =>
+  async (dispatch) => {
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("preview", preview);
 
-  if (response.ok) {
-    const image = await response.json();
-    dispatch(_addImageToSpot(image));
+    const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+      method: "POST",
+      body: formData,
+    });
 
-    return image;
-  }
+    if (response.ok) {
+      const image = await response.json();
+      dispatch(_addImageToSpot(image));
 
-  const errors = response.json();
-  return errors;
-};
+      return image;
+    }
+
+    const errors = response.json();
+    return errors;
+  };
 
 export const updateSpot = (spotId, spot) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {
@@ -192,51 +198,54 @@ const initialState = { spotList: {}, spotDetails: {}, userSpots: {} };
 const spotReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_SPOTS: {
-      return { ...state, spotList: { ...state.spotList, ...action.spots } };
+      const newState = normalize(state);
+      newState.spotList = normalize(action.spots);
+      return newState;
     }
 
-    case GET_SPOT_DETAILS:
-      return {
-        ...state,
-        spotDetails:
-          // ...state.spotDetails,
-          // [action.spotDetails.id]: action.spotDetails,
-          action.spotDetails,
-      };
+    case GET_SPOT_DETAILS: {
+      const newState = normalize(state);
+      newState.spotDetails = normalize(action.spotDetails);
+      return newState;
+    }
 
     case CREATE_SPOT: {
-      return {
-        ...state,
-        spotList: { ...state.spotList, [action.spot.id]: action.spot },
-      };
+      const newState = normalize(state);
+      const spot = normalize(action.spot);
+      newState.spotList[spot.id] = spot;
+      newState.userSpots[spot.id] = spot;
+      newState.spotDetails = spot;
+      return newState;
     }
 
     case DELETE_SPOT: {
-      const spotList = { ...state.spotList };
-      delete spotList[action.spotId];
-      return { ...state, spotList };
+      const newState = normalize(state);
+      delete newState.spotList[action.spotId];
+      return newState;
     }
 
     case ADD_IMAGE_TO_SPOT: {
-      const spotDetails = {
-        ...state.spotDetails,
-        SpotImages: {
-          ...state.spotDetails.SpotImages,
-          [action.image.id]: { ...action.image },
-        },
+      const newState = normalize(state);
+      const image = normalize(action.image);
+      newState.spotDetails.SpotImages = {
+        ...normalize(state.spotDetails.SpotImages),
       };
-      return { ...state, spotDetails: { ...spotDetails } };
+      newState.spotDetails.SpotImages[image.id] = image;
+      return newState;
     }
 
     case UPDATE_SPOT: {
-      return {
-        ...state,
-        spotList: { ...state.spotList, [action.spot.id]: action.spot },
-      };
+      const newState = normalize(state);
+      const spot = normalize(action.spot);
+      newState.spotList[spot.id] = spot;
+      newState.spotDetails = spot;
+      return newState;
     }
 
     case USER_SPOTS: {
-      return { ...state, userSpots: action.spots };
+      const newState = normalize(state);
+      newState.userSpots = normalize(action.spots);
+      return newState;
     }
 
     default:
