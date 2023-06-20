@@ -28,9 +28,11 @@ const ReviewModal = ({ spotId, review }) => {
 
     if (!rating)
       setErrors({ rating: "Please provide a rating for your review." });
-    if (input.length > 255) {
+
+    if (input.length > 255)
       setErrors({ review: "Review cannot exceed 255 characters." });
-    }
+    else if (input.length < 10)
+      setErrors({ review: "Review must be at least 10 characters long." });
   }, [input, rating]);
 
   const handleSubmit = async (e) => {
@@ -87,6 +89,12 @@ const ReviewModal = ({ spotId, review }) => {
     <div className="post-review-div">
       <h2>How was your stay{review && ` at ${spot.name}`}?</h2>
       <form onSubmit={handleSubmit}>
+        <div style={{ padding: "0", margin: "0" }}>
+          {Object.values(errors).map((message) => (
+            <p className="error">{message}</p>
+          ))}
+        </div>
+
         <textarea
           placeholder="Leave your review here..."
           value={input}
@@ -94,8 +102,6 @@ const ReviewModal = ({ spotId, review }) => {
           onChange={(e) => setInput(e.target.value)}
           onMouseEnter={() => setActiveRating(rating)}
         />
-
-        <div>{errors?.review && <p className="error">{errors.review}</p>}</div>
 
         <div
           className="star-rating"
@@ -107,11 +113,8 @@ const ReviewModal = ({ spotId, review }) => {
           <span>Stars</span>
         </div>
 
-        <div>{errors?.rating && <p className="error">{errors.rating}</p>}</div>
-
         <button
           className="submit-button"
-          disabled={input.length < 10}
           onMouseEnter={() => setActiveRating(rating)}
         >
           {review ? "Update" : "Submit"} Your Review

@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
-import { getUserBookings } from "../../store/bookings";
-import { useModal } from "../../context/Modal";
-import BookingModal, { formatDate } from "../BookingModal";
-import "./ManageBookings.scss";
 import { NavLink } from "react-router-dom";
+
+import "./ManageBookings.scss";
+import BookingModal, { formatDate } from "../BookingModal";
+import { useModal } from "../../context/Modal";
+import { getUserBookings } from "../../store/bookings";
 
 const BookingCard = ({ booking, user }) => {
   const { startDate, endDate } = booking;
-  const spot = booking.Spot;
+  const spot = useSelector((state) => state.spots.spotList[booking.spotId]);
   const { setModalContent } = useModal();
 
   return (

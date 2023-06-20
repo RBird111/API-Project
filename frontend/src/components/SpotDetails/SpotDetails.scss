@@ -1,6 +1,23 @@
+.spot-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0 auto;
+  width: 80vw;
+  height: 32vw;
+  margin-bottom: 20px;
+
+  .preview-img {
+    width: 40vw;
+    height: 32vw;
+    object-fit: cover;
+  }
+}
+
 .spot-images {
   margin: 0 auto;
-  width: 70vw;
+  width: 80vw;
   height: 32vw;
   margin-bottom: 20px;
 

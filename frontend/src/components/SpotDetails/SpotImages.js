@@ -1,4 +1,11 @@
 const SpotImages = ({ spot }) => {
+  if (Object.values(spot.SpotImages).length === 1)
+    return (
+      <div className="spot-image">
+        <img className="preview-img" src={Object.values(spot.SpotImages)[0].url} alt="preview-img" />
+      </div>
+    );
+
   return (
     <div className="spot-images">
       {/* Preview (large) image */}
