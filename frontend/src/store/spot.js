@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 // ---TYPES--- \\
 const GET_SPOTS = "spots/GET_ALL";
 const GET_SPOT_DETAILS = "spots/DETAILS";
+const SEARCH_SPOTS = "spots/SEARCH_SPOTS";
 const CREATE_SPOT = "spots/CREATE";
 const DELETE_SPOT = "spots/DELETE";
 const ADD_IMAGE_TO_SPOT = "spots/ADD_IMAGE";
@@ -24,6 +25,11 @@ const _getSpotDetails = (spotDetails) => {
     spotDetails,
   };
 };
+
+const _searchSpots = (spots) => ({
+  type: SEARCH_SPOTS,
+  spots,
+});
 
 const _createSpot = (spot) => {
   return {
@@ -93,6 +99,24 @@ export const getSpotDetails = (spotId) => async (dispatch) => {
     dispatch(_getSpotDetails(spotDetails));
 
     return spotDetails;
+  }
+
+  const errors = await response.json();
+  return errors;
+};
+
+export const searchSpots = (query) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(query),
+  });
+
+  if (response.ok) {
+    const { spots } = await response.json();
+    dispatch(_searchSpots(spots));
+
+    return spots;
   }
 
   const errors = await response.json();
@@ -206,6 +230,14 @@ const spotReducer = (state = initialState, action) => {
     case GET_SPOT_DETAILS: {
       const newState = normalize(state);
       newState.spotDetails = normalize(action.spotDetails);
+      return newState;
+    }
+
+    case SEARCH_SPOTS: {
+      const newState = normalize(state);
+
+      newState.spotList = normalize(action.spots);
+
       return newState;
     }
 

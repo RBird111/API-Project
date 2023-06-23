@@ -139,6 +139,63 @@ router.get("/", validateQueryParams, async (req, res, next) => {
   res.json({ Spots: spots, page, size });
 });
 
+// Search for spots
+router.post("/search", async (req, res, next) => {
+  const { Op } = require("sequelize");
+
+  const { query } = req.body;
+
+  const attributes = Spot.getAttributes();
+  const where = Object.keys(attributes)
+    .filter(
+      (attr) =>
+        ![
+          "id",
+          "lat",
+          "lng",
+          "ownerId",
+          "price",
+          "createdAt",
+          "updatedAt",
+        ].includes(attr)
+    )
+    .reduce(
+      (acc, attr) => {
+        acc[Op.or].push({ [attr]: { [Op.substring]: query } });
+        return acc;
+      },
+      { [Op.or]: [] }
+    );
+
+  const spots = await Spot.findAll({
+    where,
+    raw: true,
+  });
+
+  // Attach additional data to each
+  for (let spot of spots) {
+    // Get Reviews for each Spot
+    const spotReviews = await Review.findOne({
+      attributes: [[sequelize.fn("AVG", sequelize.col("stars")), "avgRating"]],
+      where: {
+        spotId: spot.id,
+      },
+      raw: true,
+    });
+
+    // Get preview image for each spot
+    const spotImg = await SpotImage.findOne({
+      where: { preview: true, spotId: spot.id },
+    });
+
+    // Add appropriate keys to each spot
+    spot.avgRating = spotReviews.avgRating;
+    spot.previewImage = spotImg ? spotImg.url : null;
+  }
+
+  res.json({ spots });
+});
+
 // Get current user's spots
 router.get("/current", requireAuth, async (req, res, next) => {
   // Get Spot
