@@ -11,6 +11,43 @@
 
   background-color: white;
 
+  .search-bar {
+    display: flex;
+    align-items: center;
+    outline: 1px solid #808080;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-grow: 0.2;
+
+    input {
+      border: none;
+      border-radius: 3px;
+      padding: 4px;
+      flex-grow: 1;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    i {
+      cursor: pointer;
+      padding: 4px;
+      color: white;
+      background-color: #808080;
+      border: 1px solid #808080;
+    }
+  }
+
+  #active-search {
+    outline: 1px solid #ff5a5f;
+
+    i {
+      background-color: #ff5a5f;
+      border: 1px solid #ff5a5f;
+    }
+  }
+
   .profile-group {
     display: flex;
     justify-content: center;
