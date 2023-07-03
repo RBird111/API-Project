@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import ProfileButton from "./ProfileButton";
 import "./Navigation.scss";
 import logo from "../../assets/scp_logo.svg";
-import { searchSpots } from "../../store/spot";
+import { getAllSpots, searchSpots } from "../../store/spot";
 
-function Navigation({ isLoaded }) {
+function Navigation({ isLoaded, setIsSearch }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [search, setSearch] = useState("");
   const sessionUser = useSelector((state) => state.session.user);
 
@@ -22,15 +23,26 @@ function Navigation({ isLoaded }) {
     e.preventDefault();
 
     await dispatch(searchSpots({ query: search }));
+    setIsSearch({ query: search, search: true });
+    history.push("/");
     setSearch("");
+  };
+
+  const logoClick = async (e) => {
+    e.preventDefault();
+
+    setSearch("");
+    await dispatch(getAllSpots());
   };
 
   return (
     <nav className="navigation">
-      <NavLink className="nav-logo" exact to="/">
-        <img src={logo} alt="logo" />
-        <h1 className="logo">scpnb</h1>
-      </NavLink>
+      <div onClick={logoClick}>
+        <NavLink className="nav-logo" exact to="/">
+          <img src={logo} alt="logo" />
+          <h1 className="logo">scpnb</h1>
+        </NavLink>
+      </div>
 
       <div className="search-bar">
         <input

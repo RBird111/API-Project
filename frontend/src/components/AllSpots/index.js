@@ -1,17 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import SpotCard from "../SpotCard";
 import "./AllSpots.scss";
+import SpotCard from "../SpotCard";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllSpots } from "../../store/spot";
+import { getAllSpots, searchSpots } from "../../store/spot";
 
-const AllSpots = () => {
+const AllSpots = ({ isSearch, setIsSearch }) => {
   const dispatch = useDispatch();
+  const { query, search } = isSearch;
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllSpots()).then(() => setIsLoaded(true));
+    if (search) {
+      dispatch(searchSpots({ query }))
+        .then(() => setIsSearch({ query: "", search: false }))
+        .then(() => setIsLoaded(true));
+    } else {
+      dispatch(getAllSpots()).then(() => setIsLoaded(true));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const spots = useSelector((state) => state.spots.spotList);

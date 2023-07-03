@@ -172,6 +172,8 @@ router.post("/search", async (req, res, next) => {
     raw: true,
   });
 
+  console.log("SEARCH RESULTS =>", spots);
+
   // Attach additional data to each
   for (let spot of spots) {
     // Get Reviews for each Spot

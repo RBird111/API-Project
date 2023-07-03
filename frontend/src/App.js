@@ -18,6 +18,7 @@ function App() {
   const dispatch = useDispatch();
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSearch, setIsSearch] = useState({ query: "", search: false });
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser())
@@ -27,12 +28,12 @@ function App() {
 
   return (
     <>
-      <Navigation isLoaded={isLoaded} />
+      <Navigation setIsSearch={setIsSearch} isLoaded={isLoaded} />
 
       {isLoaded && (
         <Switch>
           <Route exact path={`/`}>
-            <AllSpots />
+            <AllSpots setIsSearch={setIsSearch} isSearch={isSearch} />
           </Route>
 
           <Route path={`/spots/new`}>
