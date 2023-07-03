@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import { useModal } from "../../context/Modal";
 import "./BookingModal.scss";
@@ -26,6 +27,7 @@ export const formatDate = (date) => {
 
 const BookingModal = ({ spot, user, bookingData }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { closeModal, setModalContent } = useModal();
 
   const today = new Date();
@@ -87,6 +89,7 @@ const BookingModal = ({ spot, user, bookingData }) => {
     try {
       if (bookingData) await dispatch(editBooking(booking()));
       else await dispatch(createBooking(spot.id, booking()));
+      history.push("/bookings/current");
     } catch (e) {
       let err = await e.json();
       return setErrors(err.errors);
