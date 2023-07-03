@@ -1,0 +1,45 @@
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-top: 1px solid #808080;
+
+  & * {
+    padding: 5px 0;
+    margin: 0;
+  }
+
+  & p {
+    font-weight: bold;
+  }
+
+  & a {
+    text-decoration: none;
+    color: #808080;
+  }
+
+  .icons {
+    i {
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .fa-github:hover {
+      color: #6e5494;
+    }
+
+    .fa-linkedin-in {
+      margin: 0 15px;
+
+      &:hover {
+        color: #0077b5;
+      }
+    }
+
+    .fa-code-branch:hover {
+      color: #c9510c;
+    }
+  }
+}

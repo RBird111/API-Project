@@ -12,6 +12,7 @@ import UpdateSpot from "./components/UpdateSpot";
 import ManageSpots from "./components/ManageSpots";
 import ManageReviews from "./components/ManageReviews";
 import ManageBookings from "./components/ManageBookings";
+import Footer from "./components/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -63,6 +64,8 @@ function App() {
           </Route>
         </Switch>
       )}
+
+      <Footer />
     </>
   );
 }

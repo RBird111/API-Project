@@ -8,6 +8,7 @@ module.exports = {
     logQueryParameters: true,
     typeValidation: true,
     benchmark: true,
+    logging: false,
   },
   production: {
     use_env_variable: "DATABASE_URL",
