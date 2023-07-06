@@ -143,7 +143,7 @@ router.get("/", validateQueryParams, async (req, res, _next) => {
 router.post("/search", async (req, res, _next) => {
   const { Op } = require("sequelize");
 
-  const { query } = req.body + 12;
+  const { query } = req.body;
 
   const attributes = Spot.getAttributes();
   const where = Object.keys(attributes)
@@ -162,7 +162,7 @@ router.post("/search", async (req, res, _next) => {
     .reduce(
       (acc, attr) => {
         acc[Op.or].push({
-          [attr]: { [Op.iLike]: `%${query}%` },
+          [attr]: sequelize.where(sequelize.fn('LOWER', sequelize.col(attr)), 'LIKE', '%' + query + '%'),
         });
         return acc;
       },
