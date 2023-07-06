@@ -162,7 +162,7 @@ router.post("/search", async (req, res, _next) => {
     .reduce(
       (acc, attr) => {
         acc[Op.or].push({
-          [attr]: sequelize.where(sequelize.fn('LOWER', sequelize.col(attr)), 'LIKE', '%' + query + '%'),
+          [attr]: sequelize.where(sequelize.fn('LOWER', sequelize.col(attr)), 'LIKE', '%' + query.toLowerCase() + '%'),
         });
         return acc;
       },
