@@ -80,7 +80,7 @@ const validateQueryParams = [
 ];
 
 // Get all spots
-router.get("/", validateQueryParams, async (req, res, next) => {
+router.get("/", validateQueryParams, async (req, res, _next) => {
   const { Op } = require("sequelize");
 
   // Handle query params
@@ -140,7 +140,7 @@ router.get("/", validateQueryParams, async (req, res, next) => {
 });
 
 // Search for spots
-router.post("/search", async (req, res, next) => {
+router.post("/search", async (req, res, _next) => {
   const { Op } = require("sequelize");
 
   const { query } = req.body;
@@ -157,22 +157,26 @@ router.post("/search", async (req, res, next) => {
           "price",
           "createdAt",
           "updatedAt",
-        ].includes(attr)
+        ].includes(attr),
     )
     .reduce(
       (acc, attr) => {
-        acc[Op.or].push({ [attr]: { [Op.substring]: query } });
+        acc[Op.or].push({
+          [attr]: sequelize.where(
+            sequelize.fn("LOWER", sequelize.col(attr)),
+            "LIKE",
+            "%" + query + "%",
+          ),
+        });
         return acc;
       },
-      { [Op.or]: [] }
+      { [Op.or]: [] },
     );
 
   const spots = await Spot.findAll({
     where,
     raw: true,
   });
-
-  console.log("SEARCH RESULTS =>", spots);
 
   // Attach additional data to each
   for (let spot of spots) {
@@ -199,7 +203,7 @@ router.post("/search", async (req, res, next) => {
 });
 
 // Get current user's spots
-router.get("/current", requireAuth, async (req, res, next) => {
+router.get("/current", requireAuth, async (req, res, _next) => {
   // Get Spot
   const spots = await Spot.findAll({
     where: {
@@ -375,7 +379,7 @@ const validateSpot = [
 ];
 
 // Create a spot
-router.post("/", validateSpot, async (req, res, next) => {
+router.post("/", validateSpot, async (req, res, _next) => {
   const ownerId = req.user.id;
   const { address, city, state, country, name, description, price } = req.body;
 
@@ -389,7 +393,7 @@ router.post("/", validateSpot, async (req, res, next) => {
         "X-Api-Key": process.env.X_API_KEY,
       },
       "Content-Type": "application/json",
-    }
+    },
   );
 
   const result = await response.json();
@@ -447,7 +451,7 @@ router.post(
       url: spotImage.url,
       preview: spotImage.preview,
     });
-  }
+  },
 );
 
 // Validate review body
@@ -570,7 +574,7 @@ router.put("/:spotId", validateSpot, async (req, res, next) => {
         "X-Api-Key": process.env.X_API_KEY,
       },
       "Content-Type": "application/json",
-    }
+    },
   );
 
   const result = await response.json();
