@@ -13,7 +13,7 @@ spotImageData.forEach((arr, i) => {
     spotImages.push({
       spotId: i + 1,
       url: img.url,
-      preview: !j ? true : false,
+      preview: !j,
     });
   });
 });
